@@ -4,7 +4,7 @@
   <title><![CDATA[CarpenterBlog]]></title>
   <link href="http://blog.zhengyu.site/atom.xml" rel="self"/>
   <link href="http://blog.zhengyu.site/"/>
-  <updated>2018-12-21T04:16:58+08:00</updated>
+  <updated>2018-12-21T04:18:57+08:00</updated>
   <id>http://blog.zhengyu.site/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -55,15 +55,19 @@ s.setAttribute('data-timestamp', +new Date());
 
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-<p>var disqus_shortname = &#39;http-blog-zhengyu-site&#39;; </p>
+<div id="disqus_thread"></div>
 
-<p>(function() {<br/>
-       var dsq = document.createElement(&#39;script&#39;); dsq.type = &#39;text/javascript&#39;; dsq.async = true;<br/>
-       dsq.src = &#39;//&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;<br/>
-       (document.getElementsByTagName(&#39;head&#39;)[0] || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(dsq);<br/>
-   })();<br/>
-</script><br/>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></p>
+<script type="text/javascript">
+var disqus_shortname = 'http-blog-zhengyu-site'; 
+
+   (function() {
+       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+       dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+   })();
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <ol>
 <li>canvas的操作是使用相对坐标系</li>
