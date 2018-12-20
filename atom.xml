@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[CarpenterBlog]]></title>
-  <link href="blog.zhengyu.site/atom.xml" rel="self"/>
-  <link href="blog.zhengyu.site/"/>
-  <updated>2018-12-21T03:49:54+08:00</updated>
-  <id>blog.zhengyu.site/</id>
+  <link href="http://blog.zhengyu.site/atom.xml" rel="self"/>
+  <link href="http://blog.zhengyu.site/"/>
+  <updated>2018-12-21T03:51:33+08:00</updated>
+  <id>http://blog.zhengyu.site/</id>
   <author>
     <name><![CDATA[]]></name>
     
@@ -15,10 +15,12 @@
   
   <entry>
     <title type="html"><![CDATA[eifjei]]></title>
-    <link href="blog.zhengyu.site/15453337323289.html"/>
+    <link href="http://blog.zhengyu.site/15453337323289.html"/>
     <updated>2018-12-21T03:22:12+08:00</updated>
-    <id>blog.zhengyu.site/15453337323289.html</id>
+    <id>http://blog.zhengyu.site/15453337323289.html</id>
     <content type="html"><![CDATA[
+<p>aaaa</p>
+
 <ol>
 <li>canvas的操作是使用相对坐标系</li>
 <li><p>如何通过相对坐标系的API来实现绝对坐标系的效果？</p>
