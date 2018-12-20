@@ -4,7 +4,7 @@
   <title><![CDATA[CarpenterBlog]]></title>
   <link href="http://blog.zhengyu.site/atom.xml" rel="self"/>
   <link href="http://blog.zhengyu.site/"/>
-  <updated>2018-12-21T04:26:23+08:00</updated>
+  <updated>2018-12-21T04:26:57+08:00</updated>
   <id>http://blog.zhengyu.site/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -56,12 +56,11 @@ s.setAttribute('data-timestamp', +new Date());
 
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-<div id="disqus_thread"></div>
-
+<!--<div id="disqus_thread"></div>
 <script type="text/javascript">
 
 
-<!--var disqus_shortname = 'http-blog-zhengyu-site'; 
+var disqus_shortname = 'http-blog-zhengyu-site'; 
 
    (function() {
        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -69,8 +68,7 @@ s.setAttribute('data-timestamp', +new Date());
        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
    })();
 </script>
-
-<p><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>--&gt;</p>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>-->
 
 <ol>
 <li>canvas的操作是使用相对坐标系</li>
