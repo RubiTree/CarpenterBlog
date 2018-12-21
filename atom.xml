@@ -4,7 +4,7 @@
   <title><![CDATA[CarpenterBlog]]></title>
   <link href="http://blog.zhengyu.site/atom.xml" rel="self"/>
   <link href="http://blog.zhengyu.site/"/>
-  <updated>2018-12-22T02:29:08+08:00</updated>
+  <updated>2018-12-22T02:34:55+08:00</updated>
   <id>http://blog.zhengyu.site/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -20,21 +20,6 @@
     <id>http://blog.zhengyu.site/15454148774873.html</id>
     <content type="html"><![CDATA[
 <p>【透镜系列】</p>
-
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-
-<div id="vcomments"></div>
-
-<script>
-    new Valine({
-        el: '#vcomments',
-        appId: 'fnTU2upQ0TyY3nweOUj5G2Ht-gzGzoHsz',
-        appKey: 'UcOPNcgGvlpqvrGosTlH4jSY',
-        placeholder: '来都来了',
-        visitor: true
-    })
-</script>
 
 ]]></content>
   </entry>
