@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  CarpenterBlog
+  最后几个Markdown语法 - CarpenterBlog
   
 
   </title>
@@ -78,17 +78,14 @@ $(document).ready(function(event) {
 </nav>
   <div id="main">
     <div id="content"> 
-<div class="blog-index">
-
-	<article>
-		 <header>
-		  	<h1 class="entry-title"><a href="15453782750216.html">最后几个Markdown语法</a></h1>
-			<p class="meta"><time datetime="2018-12-21T15:44:35+08:00" 
-			pubdate data-updated="true">2018/12/21</time></p>
-		 </header>
-	  	<div class="entry-content">
-		  	
-		  	<p>现在基本上所有的Markdown语法都很熟悉了，刚大概了解到了最后几个</p>
+<div>
+	<article class="hentry" role="article">
+	<header>
+			  	<h1 class="entry-title">最后几个Markdown语法</h1>
+				<p class="meta"><time datetime="2018-12-21T15:44:35+08:00" pubdate data-updated="true">2018/12/21</time></p>
+			 </header>
+		  	<div class="entry-content">
+			  	<p>现在基本上所有的Markdown语法都很熟悉了，刚大概了解到了最后几个</p>
 
 <h2 id="toc_0">首先是引用其实很强大</h2>
 
@@ -160,87 +157,39 @@ $(document).ready(function(event) {
 <li><p>悄悄的我走了， 正如我悄悄的来； 我挥一挥衣袖， 不带走一片云彩。</p></li>
 </ol>
 
-
-		</div>
+			</div>
 
 		
+	  
+		<footer>
+		 <p class="meta">
 
-	</article>
- 
-	<article>
-		 <header>
-		  	<h1 class="entry-title"><a href="15444051477462.html">【透镜系列】Canvas变换</a></h1>
-			<p class="meta"><time datetime="2018-12-10T09:25:47+08:00" 
-			pubdate data-updated="true">2018/12/10</time></p>
-		 </header>
-	  	<div class="entry-content">
-		  	
-		  	<!--
-真的承认了，其实正常很多操作都是相对的
-save clip都可以放后篇
+			
+			<span class="categories">
+			 
+			</span>
+		    </p>
+		    <p class="meta">
+		      
+		 </p>
+	    
+		<div class="sharing">
+		  
+          
 
-关键是这几个类：先就是Canvas
-然后讲到直接操作Matrix就有了Matrix
-再讲到Camera，就只有Camera了
-
-列出它们的api就行了
-
-然后例子就是
-- 一次基本变换，直接绘制
-
--->
-
-<p>引子</p>
-
-<ol>
-<li><p><code>Canvas</code>变换是我们开发自定义控件时非常熟悉的操作，<code>Canvas</code>提供的变换操作有这些：平移、缩放、旋转、错切。对<code>Canvas</code>进行变换后，再在<code>Canvas</code>上进行绘制，绘制出的图形就能体现出刚才变换的效果</p>
-
-<ol>
-<li><p>比如往 \(X\) 轴和 \(Y\) 轴的正方向平移100像素：</p>
-
-<pre><code>canvas.translate(100f, 100f)
-canvas.drawBitmap(image)
-</code></pre>
-
-<p><img src="media/15444051477462/15449657481603.gif" alt=""/><br/>
-（图中每一个小方格间距50像素，每两个小方格间有一个刻度，代表100像素）</p></li>
-</ol></li>
-<li><p>但在我们要实现一些稍微复杂的连续变换时，比如不使用带偏移中心的API，把图形绕<code>(200, 200)</code>顺时针旋转90度；或是使用<code>Camera</code>进行连续变换以实现绕图片的中线翻转；或者其他更复杂的需求时，你会发现按照正常思路，往往无法得到你想要的效果</p>
-
-<ol>
-<li>洁厕剂jiejfie费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把1
-
-<ol>
-<li>费解架飞机费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把</li>
-</ol></li>
-<li>费解架飞机费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把</li>
-</ol>
-
-<p>诶计费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把费会被告知：把代</p></li>
-<li><p>于是你可能会被告知：把代码当成是倒着执行的，所以你先正着写，再把操作顺序倒过来，就能实现你的需求了。但是这样为什么能实现需求？为什么代码是倒着执行的？正着倒着是相对什么来的，为什么正着我也能写出好几种变换顺序？为什么有的时候代码又是正着执行的？为什么有的时候这个方法还是没有实现预期的效果？这些问题可能还是很让你头大</p></li>
-<li><p>然后你可能也听说过，对<code>Canvas</code>进行变换还可以通过操作<code>Matrix</code>实现，但是具体怎么做，它的<code>preXXX</code>和<code>postXXX</code>操作到底代表了什么意思，你可能不是很明白</p></li>
-<li><p>最后你可能还知道可以通过<code>Camera</code>进行三维变换，但是变换的效果往往出乎你的预料</p></li>
-<li><p>所以本文的目标就是要把这些问题分析清楚，让你真正理解<code>Canvas</code>变换究竟是怎么运作的，以及为什么这么运作 </p></li>
-</ol>
-
-
+          
 
 		</div>
 
-		 
-		 <footer>
-      	<a rel="full-article" href="15444051477462.html#more">read more &rarr;</a>
-    	</footer>
-    	
-
-	</article>
-  
-	<div class="pagination">
-	
-<a href="archives.html">Blog Archives</a>
-	 
+	    <p class="meta">
 	    
-	</div>
+	    
+	        <a class="basic-alignment right" href="15444051477462.html" 
+	        title="Next Post: 【透镜系列】Canvas变换">【透镜系列】Canvas变换 &raquo;</a>
+	    
+	    </p>
+	  </footer>
+	</article>
 </div>
  <aside class="sidebar"> 
 
