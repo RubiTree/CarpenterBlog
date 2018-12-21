@@ -4,7 +4,7 @@
   <title><![CDATA[CarpenterBlog]]></title>
   <link href="http://blog.zhengyu.site/atom.xml" rel="self"/>
   <link href="http://blog.zhengyu.site/"/>
-  <updated>2018-12-21T10:57:53+08:00</updated>
+  <updated>2018-12-21T11:01:51+08:00</updated>
   <id>http://blog.zhengyu.site/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -19,7 +19,7 @@
     <updated>2018-12-21T03:22:12+08:00</updated>
     <id>http://blog.zhengyu.site/15453337323289.html</id>
     <content type="html"><![CDATA[
-<p>12</p>
+<p>13</p>
 
 <ol>
 <li>canvas的操作是使用相对坐标系</li>
