@@ -4,7 +4,7 @@
   <title><![CDATA[CarpenterBlog]]></title>
   <link href="http://blog.zhengyu.site/atom.xml" rel="self"/>
   <link href="http://blog.zhengyu.site/"/>
-  <updated>2018-12-21T16:01:22+08:00</updated>
+  <updated>2018-12-21T18:50:41+08:00</updated>
   <id>http://blog.zhengyu.site/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -251,6 +251,37 @@
 
 <hr/>
 
+<p>【1】想想要怎么实现这样的效果</p>
+
+<ol>
+<li><p>黄梅时节家家雨</p>
+
+<ol>
+<li>青草池塘处处蛙</li>
+</ol>
+
+<p>黄梅时节家家雨</p></li>
+<li><p>有约不来过夜半</p></li>
+<li><p>闲敲棋子落灯花</p></li>
+</ol>
+
+<hr/>
+
+<p>直接这样肯定不行</p>
+
+<ol>
+<li>黄梅时节家家雨
+
+<ol>
+<li>青草池塘处处蛙
+黄梅时节家家雨</li>
+</ol></li>
+<li>有约不来过夜半</li>
+<li>闲敲棋子落灯花</li>
+</ol>
+
+<hr/>
+
 <ol>
 <li><p>黄梅时节家家雨</p>
 
@@ -263,6 +294,8 @@
 <li><p>有约不来过夜半</p></li>
 <li><p>闲敲棋子落灯花</p></li>
 </ol>
+
+<hr/>
 
 <hr/>
 
