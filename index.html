@@ -94,6 +94,34 @@ $(document).ready(function(event) {
 
 <p>fejfeifjei</p>
 
+<ol>
+<li>然后就有一种办法，能通过线性变换来表示仿射变换，这样对于包括平移的四种基本操作，都能像线性变换一样，消除中间坐标的运算，这种办法简单说是：增加一个维度
+
+<ol>
+<li>先简要描述这个转化过程，非常简洁巧妙
+
+<ol>
+<li>\(\overrightarrow{P} = M · \overrightarrow{P_0} + \overrightarrow{T}\) 可以写成 \( \begin{bmatrix} \overrightarrow{P} \\ 1 \end{bmatrix} = \begin{bmatrix} M &amp; \overrightarrow{T} \\ 0 &amp; 1 \end{bmatrix} · \begin{bmatrix} \overrightarrow{P_0} \\ 1 \end{bmatrix} \) 
+
+<ol>
+<li>它们在数学上是等价的</li>
+<li>（这里为了清晰，<code>2*1</code>的矩阵写成了向量的形式）</li>
+</ol></li>
+<li>而左侧就是仿射变换的形式，右侧则得到了线性变换的形式，完成了一个巧妙的转化
+
+<ol>
+<li>这里同时把二维坐标位置扩展成三维列向量，把二维变换矩阵扩展成三维矩阵</li>
+<li>其中二维坐标位置扩展成的三维列向量在计算机图形学中被称为齐次坐标，新加入的维度信息被称为齐次参数，它只需要是一个非零值，最方便的做法是把它设置为1
+
+<ol>
+<li>（@@@拓展内容，可以再补充一点，是搜索的网页里有）为什么叫齐次，齐次在很多地方都有这个概念，它的英文单词是xx，表示同等的概念，在这里它就表示，</li>
+</ol></li>
+<li>我们只需要关注初始的 \(\overrightarrow{P_0}\) 和变换后的 \(\overrightarrow{P}\)，忽略第三个维度中1的信息，它的存在只是类似辅助线的效果，</li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol>
+
 
 		</div>
 
