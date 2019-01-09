@@ -191,7 +191,7 @@ $(document).ready(function(event) {
 
 <h3 id="toc_2">1.2. 分析问题原因</h3>
 
-<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 &gt; 事件分发》</a>的理论部分）</p>
+<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 &gt; 触摸事件分发》</a>的理论部分）</p>
 
 <p>如果你熟悉 Android 的触摸事件分发机制，那么原因很好理解：两个<code>ScrollView</code>嵌套时，滑动距离终于达到滑动手势判定阈值（<code>mTouchSlop</code>）的这个<code>MOVE</code>事件，会先经过父 View 的<code>onInterceptTouchEvent()</code>方法，父 View 于是直接把事件拦截，子 View 的<code>onTouchEvent()</code>方法里虽然也会在判定滑动距离足够后调用<code>requestDisallowInterceptTouchEvent(true)</code>，但始终要晚一步。</p>
 
@@ -1047,7 +1047,7 @@ public void computeScroll() {
 	    
 	    
 	        <a class="basic-alignment right" href="15456255866253.html" 
-	        title="Next Post: 【透镜系列】看穿 > 事件分发">【透镜系列】看穿 > 事件分发 &raquo;</a>
+	        title="Next Post: 【透镜系列】看穿 > 触摸事件分发">【透镜系列】看穿 > 触摸事件分发 &raquo;</a>
 	    
 	    </p>
 	  </footer>
@@ -1080,7 +1080,7 @@ public void computeScroll() {
 	  
 	      
 		      <li class="post">
-		        <a href="15456255866253.html">【透镜系列】看穿 > 事件分发</a>
+		        <a href="15456255866253.html">【透镜系列】看穿 > 触摸事件分发</a>
 		      </li>
 	     
 	   
