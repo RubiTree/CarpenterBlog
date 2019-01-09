@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-10T02:01:49+08:00</updated>
+  <updated>2019-01-10T02:06:14+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -122,7 +122,7 @@
 
 <h3 id="toc_2">1.2. 分析问题原因</h3>
 
-<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 事件分发》</a>的理论部分）</p>
+<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 &gt; 事件分发》</a>的理论部分）</p>
 
 <p>如果你熟悉 Android 的触摸事件分发机制，那么原因很好理解：两个<code>ScrollView</code>嵌套时，滑动距离终于达到滑动手势判定阈值（<code>mTouchSlop</code>）的这个<code>MOVE</code>事件，会先经过父 View 的<code>onInterceptTouchEvent()</code>方法，父 View 于是直接把事件拦截，子 View 的<code>onTouchEvent()</code>方法里虽然也会在判定滑动距离足够后调用<code>requestDisallowInterceptTouchEvent(true)</code>，但始终要晚一步。</p>
 
@@ -952,7 +952,7 @@ public void computeScroll() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[【透镜系列】看穿 事件分发]]></title>
+    <title type="html"><![CDATA[【透镜系列】看穿 > 事件分发]]></title>
     <link href="http://blog.rubitree.com/15456255866253.html"/>
     <updated>2018-12-24T12:26:26+08:00</updated>
     <id>http://blog.rubitree.com/15456255866253.html</id>
@@ -2081,7 +2081,7 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 
 <h4 id="toc_13">3.3.2.使用 NestedScrolling 机制实现悬停布局</h4>
 
-<p>如果有对<code>NestedScrolling</code>机制还不是很了解的同学，可以参考我的另一篇篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 NestedScrolling 机制》</a></p>
+<p>如果有对<code>NestedScrolling</code>机制还不是很了解的同学，可以参考我的另一篇篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 &gt; NestedScrolling 机制》</a></p>
 
 <p><code>NestedScrolling</code>机制帮我们做了太多事情，我们只需要实现一个简单的 <code>ns parent</code> 就好了<br/>
 代码简单得我都不想多说了，关键代码就是这些，完整代码可以看这里：</p>
