@@ -1,0 +1,1350 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>
+  
+  【透镜系列】看穿 事件分发 - CarpenterBlog
+  
+
+  </title>
+  <meta name="author" content="">
+  <meta name="description" content="">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="asset/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="atom.xml" rel="alternate" title="CarpenterBlog" type="application/atom+xml">
+  <script src="asset/js/modernizr-2.0.js"></script>
+  <script src="asset/js/jquery.min.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/monokai.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <style type="text/css">
+  .cat-children-p{ padding: 6px 0px;}
+  .hljs{background: none;}
+  </style>
+  <script type="text/javascript">
+  var isAddSildbar = true;
+  </script>
+  <script src="asset/js/octopress.js" type="text/javascript"></script>
+</head>
+<script type="text/javascript">
+//链接新开窗口
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+$(document).ready(function(event) {
+  addBlankTargetForLinks();
+});
+</script>
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="index.html">CarpenterBlog</a></h1>
+
+    <h2></h2>
+
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+
+</ul>
+
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.rubitree.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+
+  <li id=""><a target="_self" href="index.html">首页</a></li>
+
+  <li id=""><a target="_self" href="archives.html">归档</a></li>
+
+  <li id=""><a target="_self" href="series.html">系列</a></li>
+
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+ 
+<div>
+	<article class="hentry" role="article">
+	<header>
+			  	<h1 class="entry-title">【透镜系列】看穿 事件分发</h1>
+				<p class="meta"><time datetime="2018-12-24T12:26:26+08:00" pubdate data-updated="true">2018/12/24</time></p>
+			 </header>
+		  	<div class="entry-content">
+			  	<p><img src="media/15456255866253/2019-01-02_01-18-46%20-2-.gif" alt=""/></p>
+
+<span id="more"></span><!-- more -->
+
+<hr/>
+
+<p>目录：</p>
+
+<ul>
+<li>
+<a href="#toc_0">引子</a>
+</li>
+<li>
+<a href="#toc_1">1.试造轮子</a>
+<ul>
+<li>
+<a href="#toc_2">1.1.第一次试造</a>
+</li>
+<li>
+<a href="#toc_3">1.2.第二次试造</a>
+</li>
+<li>
+<a href="#toc_4">1.3.第三次试造</a>
+</li>
+<li>
+<a href="#toc_5">1.4.第四次试造</a>
+</li>
+<li>
+<a href="#toc_6">1.5.第五次试造</a>
+</li>
+<li>
+<a href="#toc_7">1.6.总结</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_8">2.测试轮子</a>
+</li>
+<li>
+<a href="#toc_9">3.实践</a>
+<ul>
+<li>
+<a href="#toc_10">3.1.选题</a>
+</li>
+<li>
+<a href="#toc_11">3.2.需求分析</a>
+</li>
+<li>
+<a href="#toc_12">3.3.需求实现</a>
+<ul>
+<li>
+<a href="#toc_13">3.3.2.使用 NestedScrolling 机制实现悬停布局</a>
+</li>
+<li>
+<a href="#toc_14">3.3.3.使用外部 View 主导手动实现悬停布局</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_15">4.附录</a>
+</li>
+</ul>
+
+
+<h2 id="toc_0">引子</h2>
+
+<p>事件分发，我想大部分人都能说几句，哦，三大方法，哦，那段经典伪代码，哦，责任链...<br/>
+但如果要让你完完整整捋一遍，你可能就开始支支吾吾了，只能想到啥说啥</p>
+
+<p>这块的东西确实麻烦，说出来不怕吓到你，事件流到底怎么流与这些因素都有关系：是什么事件类型（<code>DOWN/MOVE/UP/CANCEL</code>）、所在的View种类（<code>Activity/ViewGroup/View</code>）、在哪个回调方法（<code>dispatch()/onIntercept()/onTouch()</code>）、回调方法给不同的返回值（<code>true/false/super.xxx</code>），甚至对当前事件的不同处理还会对同一事件流中接下来的事件造成不同影响<br/>
+比如我可以问：重写某个<code>ViewGroup</code>里的<code>dispatchTouchEvent</code>方法，对<code>MOVE</code>事件返回<code>false</code>，会怎么影响接下来的事件分发？</p>
+
+<p>于是就有人对这些情况分门别类进行总结，得到了很多规律，也画出了纷繁复杂的事件分发流程图（@@@换图）：<br/>
+<img src="media/15456255866253/6C9609F1-7EEB-41B3-8FEC-F4F041377253.png" alt="" style="width:250px;"/>× N     <img src="media/15456255866253/45107265-0557-4E55-9FEB-EA54AB9E7E20.png" alt="" style="width:330px;"/>  × N<br/>
+甚至还有类似题图那样的动态流程图（是的，吸引你进来的题图居然是反面教材，我也很心疼啊，画了我半个下午，结果最后并没有太大的帮助）</p>
+
+<p>这些规律和流程图确实是对的，而且某种意义上也是非常清晰的，能帮助你在调试bug的时候找到一点方向<br/>
+你或许可以奋发图强，把这些流程图和规律背下来，在需要的时候一通叽里呱啦背完大家大眼瞪小眼<br/>
+但它们并不能让你真正理解事件分发是什么样子，面对「是什么、为什么、怎么办」三连，你只能抱拳告辞</p>
+
+<!--这样的所谓的规则、规律之类的它是什么样的东西我能给你写一打-->
+
+<!--这显然不太行，真正理解的人不是这个样子，你得把握其背后的逻辑，你得对其是什么样以及为什么是这样都了如指掌-->
+
+<!--但事件分发真的有那么复杂吗？真的有必要那么复杂吗？显然不是，不就分发个事件吗..-->
+
+<p>那要怎么理解事件分发呢？如果你去请教大牛，大牛说，这简单啊，去看<code>View</code>和<code>ViewGroup</code>这几个方法的源码，看懂你就会了<br/>
+大牛说得没毛病，不过我们菜鸡可能还是很懵逼，这几个方法的源码没有长到没法看的程度，但一堆其他的细节也把基本的逻辑涂抹地面目全非，所以这几个方法不是不能看，而且最后一定要看，只是不太适合一开始就直接看</p>
+
+<p>那要看什么呢？看下面这份代码，它把源码中与事件分发相关的内容剥离了出来，至少有这两个优点：</p>
+
+<ol>
+<li>相比源码，这份代码足够短足够简单，那些跟事件分发无关的东西通通不要来干扰我
+
+<ol>
+<li>长度总共不超过150行，剔除了所有跟事件分发无关的代码，并且把一些因为其他细节导致写得比较复杂的逻辑，用更简单直接的方式表达了</li>
+</ol></li>
+<li>相比那段经典的事件分发伪代码（见附录），这份代码又足够详细，详细到能告诉你所有你需要知道的事件分发的具体细节
+
+<ol>
+<li>那段经典伪代码只能起到提纲挈领的作用，而这份麻雀代码虽然极其精简但它五脏俱全，全到可以直接跑</li>
+<li>你可以用它进行为伪布局，然后触发触摸事件，如果在回调中打印日志，它打印出的事件分发过程与你使用系统控件真实布局时事件分发的过程是一模一样的（后文会提供一个方便的事件分发日志打印工具）</li>
+</ol></li>
+</ol>
+
+<!--
+好吧，虽然这很精辟，但是看了它，你能知道在不同的函数返回不同的值代表什么意思吗？会怎么影响后续的事件流?
+你不知道，只能去看源码
+但是源码这都是些什么啊，怎么这么多flag，还有assceeiblity，touchtarget又是什么？
+所以你需要一份代码，它要足够详细，详细到能告诉你所有你需要知道的具体的行为，它又要足够简单，那些跟事件分发无关的东西通通不要来干扰我
+这份代码就是为了满足这个要求而生的
+-->
+
+<p>先开门见山直接把小麻雀贴出来，如果能直接看明白，那是最好的，如果不想看也可以先跳过，后文会带你一步步把它看明白，进而看穿事件分发</p>
+
+<pre><code class="language-kotlin">// 本文代码基本都是Kotlin（@@@java版本可以看仓库）
+
+interface ViewParent {
+    fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean)
+}
+
+open class MView {
+    var parent: ViewParent? = null
+
+    open fun dispatch(ev: MotionEvent): Boolean {
+        // 源码里没有这么直接但区别不大，主要会考虑是否设置了onTouchListener和是否enable
+        return onTouch(ev)
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+
+open class MViewGroup(private val child: MView) : MView(), ViewParent {
+    private var isChildNeedEvent = false
+    private var isSelfNeedEvent = false
+    private var isDisallowIntercept = false
+
+    init {
+        child.parent = this // 这里只是示意，实际中不建议这么写，会造成提前发布未构造完成的实例
+    }
+
+    override fun dispatch(ev: MotionEvent): Boolean {
+        var handled = false
+
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            clearStatus()
+
+            if (!isDisallowIntercept &amp;&amp; onIntercept(ev)) {
+                isSelfNeedEvent = true
+                handled = onTouch(ev)
+            } else {
+                handled = child.dispatch(ev)
+                if (handled) isChildNeedEvent = true
+
+                if (!handled) { // 这里没有用 if else 是因为这样写上下一致，更清晰
+                    handled = onTouch(ev)
+                    if (handled) isSelfNeedEvent = true
+                }
+            }
+        } else {
+            // 这里 isSelfNeedEvent 条件判断应该放在 isChildNeedEvent 前面
+            // 因为两个都为真的情况只能是自己之后通过 onIntercept 抢了控制权，那这之后的控制权就不会去 child 那儿了
+            if (isSelfNeedEvent) {
+                handled = onTouch(ev)
+            } else if (isChildNeedEvent) {
+                if (!isDisallowIntercept &amp;&amp; onIntercept(ev)) {
+                    isSelfNeedEvent = true
+
+                    val cancel = MotionEvent.obtain(ev)
+                    cancel.action = MotionEvent.ACTION_CANCEL
+                    handled = child.dispatch(cancel)
+                    cancel.recycle()
+                } else {
+                    handled = child.dispatch(ev)
+                }
+            }
+            // 这里不用再 else 了，因为如果 isSelfNeedEvent 和 isChildNeedEvent 都不为 true，上面不会再发事件下来了
+        }
+
+        if (ev.actionMasked == MotionEvent.ACTION_UP
+            || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
+            clearStatus()
+        }
+
+        return handled
+    }
+
+    private fun clearStatus() {
+        isChildNeedEvent = false
+        isSelfNeedEvent = false
+        isDisallowIntercept = false
+    }
+
+    override fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+
+    open fun onIntercept(ev: MotionEvent): Boolean {
+        return false
+    }
+
+    override fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean) {
+        this.isDisallowIntercept = isDisallowIntercept
+        parent?.requestDisallowInterceptTouchEvent(isDisallowIntercept)
+    }
+}
+
+/**
+ * 这里的大逻辑类似 MViewGroup，但细节很多不同，主要因为没有 onIntercept，会简单一些
+ */
+open class MActivity(private val childGroup: MViewGroup) {
+    private var isChildNeedEvent = false
+    private var isSelfNeedEvent = false
+
+    open fun dispatch(ev: MotionEvent): Boolean {
+        var handled = false
+
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            clearStatus()
+
+            handled = childGroup.dispatch(ev)
+            if (handled) isChildNeedEvent = true
+
+            if (!handled) {
+                handled = onTouch(ev)
+                if (handled) isSelfNeedEvent = true
+            }
+        } else {
+            // 这里 isSelfNeedEvent 和 isChildNeedEvent 不会同时为真，顺序无所谓
+            if (isSelfNeedEvent) {
+                handled = onTouch(ev)
+            } else if (isChildNeedEvent) {
+                handled = childGroup.dispatch(ev)
+            }
+
+            if (!handled) handled = onTouch(ev)
+        }
+
+        if (ev.actionMasked == MotionEvent.ACTION_UP
+            || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
+            clearStatus()
+        }
+
+        return handled
+    }
+
+    private fun clearStatus() {
+        isChildNeedEvent = false
+        isSelfNeedEvent = false
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+</code></pre>
+
+<ol>
+<li>小麻雀在模拟布局的时候做了一些简化：View的父子关系通过构造器建立，而且是独生子女，一个父容器中只有一个子元素</li>
+<li>感觉有点乱是不是，没有想象中那么简单啊，它是不是对的呢，你写的是代码还是bug啊？没事，让我们来测试一下（为了避免引子部分过长，测试部分放在正文后面）</li>
+</ol>
+
+<p>这段不长的代码能让你相对容易地对事件分发具体是什么样有所了解<br/>
+但讲道理，它还是有点复杂，而且看完你也不一定能理解它为什么是这样，这也是读别人代码的困难之处：没有思路<br/>
+所以能不能再简单一点呢？</p>
+
+<p>能！我理想中的可读代码应该是长这样的：要实现的需求 -&gt; 所使用的方案 -&gt; 操作的细节 -&gt; 具体的代码<br/>
+所以本着己所不欲勿施于人的朴实道理，下面我将假设我们要从头造一个事件分发的框架，先从最简单的需求开始思考方案编写代码，然后不断增加需求并继续思考方案编写代码，最后得到上面这段基本逻辑与Android源码接近的麻雀代码</p>
+
+<h2 id="toc_1">1.试造轮子</h2>
+
+<h3 id="toc_2">1.1.第一次试造</h3>
+
+<p>我们先实现一个最简单的需求：Activity中有一堆层层嵌套的View，有且只有最里边那个View要处理事件，比如点击事件<br/>
+<img src="media/15456255866253/15463677874030.jpg" alt="" style="width:350px;"/></p>
+
+<p>思考方案：</p>
+
+<ol>
+<li>首先事件从哪儿来，肯定得从父亲那来，因为子View被包裹在里面，没有直接与外界通信的办法，而实际中<code>Activity</code>连接着根View<code>DecorView</code>，它是通往外界的桥梁，能接收到屏幕硬件发送过来的触摸事件</li>
+<li>所以事件是从<code>Activity</code>开始，一层一层从<code>ViewGroup</code>传到最里边的子View</li>
+<li>这时只需要一个从外向里传递事件的<code>passEvent(ev)</code>方法，父亲一层层往里调，能把事件传递过去，就完成了需求</li>
+</ol>
+
+<p>示意图<br/>
+<img src="media/15456255866253/15463678459112.jpg" alt="" style="width:400px;"/></p>
+
+<p>麻雀代码：</p>
+
+<pre><code class="language-kotlin">open class MView {
+    open fun passEvent(ev: MotionEvent) {
+        // do sth
+    }
+}
+    
+class MViewGroup(private val child: MView) : MView() {
+    override fun passEvent(ev: MotionEvent) {
+        child.passEvent(ev)
+    }
+}
+</code></pre>
+
+<ol>
+<li>暂时把<code>Activity</code>当成<code>MViewGroup</code>处理也没有问题</li>
+<li>为什么是<code>MViewGroup</code>继承<code>MView</code>而不是反过来，跟事件分发没有关系，这里就按照习惯来</li>
+</ol>
+
+<h3 id="toc_3">1.2.第二次试造</h3>
+
+<p>然后我们增加一条需求，让情况复杂一点：<code>Activity</code>中有一堆层层嵌套的View，有好几个叠着的View能处理事件<br/>
+<img src="media/15456255866253/15463678689560.jpg" alt="" style="width:350px;"/></p>
+
+<p>同时需要增加一条设计原则：<strong>用户的一次操作，只能被一个View真正处理（消费）</strong></p>
+
+<ol>
+<li>要求这条原则是为了让操作的反馈符合用户直觉</li>
+<li>很容易理解，正常情况下人只会想一次就做一件事
+
+<ol>
+<li>比如一个列表条目，列表可以点击进入详情，列表上还有个编辑按钮，点击可以编辑条目
+
+<ol>
+<li>这是一个上下两个View都能点击的场景，但用户点一个地方，肯定只想去做一件事，要么进入详情，要么是编辑条目，如果你点编辑结果跳了两个页面，那肯定是不合适的</li>
+</ol></li>
+<li>再比如在一个可点击Item组成的列表里（比如微信的消息界面），Item可以点击进入某个聊天，列表还能滑动上下查看
+
+<ol>
+<li>如果你让Item和列表都处理事件，那在你滑动的时候，你可能得跳一堆你不想去的聊天页面</li>
+</ol></li>
+</ol></li>
+</ol>
+
+<!--（@@@可能有好事者会举手问，你个乡巴佬没见过coordarylayout吗。首先，其实还是一个View消费，一个View消费对开发者的好处是，减少代码的耦合，coordarylayout是一个View消费事件作出自己的反应后，其他相关的依赖View会作出相应的变换，另外其实这是用在开发者确实需要几个View配合作出符合用户直觉的效果的场景，而不是你瞎几把写出的大家乱搞的场景）-->
+
+<p>如果使用第一次试造的框架，要遵守这条原则，就需要在每一个可以处理事件的View层级，判断出自己要处理事件后，不继续调用<code>child</code>的<code>passEvent</code>方法了，保证只有自己处理了事件<br/>
+但如果真这样实现了，在大部分场景下会显得怪怪的，因为处理事件的顺序不对</p>
+
+<ol>
+<li>比如还是上面的列表，当用户点击按钮想编辑条目的时候，点击事件先传到条目，如果你在条目中判断需要事件，然后把事件消费了不传给子View，用户就永远点不开编辑条目了</li>
+<li>而且换个角度看更加明显，用户肯定希望点哪，哪儿最靠上、离手指最近的东西被触发</li>
+</ol>
+
+<p>所以新增需求的一个得分点是：<strong>找到那个适合处理事件的View</strong>，而我们当前的答案是：<strong>那个最里面的View适合处理事件</strong></p>
+
+<p>这就不能是等<code>parent</code>不处理事件了才把事件传给<code>child</code>，应该反过来，你需要事件的处理顺序是从里向外：里边的<code>child</code>不要事件了，才调用<code>parent</code>的<code>passEvent</code>方法把事件传出来<br/>
+于是得加一条向外的通道，只能在这条向外的通道上处理事件，前面向里的通道什么都不干，只管把事件往里传<br/>
+所以这时你有了两条通道，改个名字吧，向里传递事件是<code>passIn</code>方法，向外传递并处理事件是<code>passOut</code>方法</p>
+
+<p>示意图<br/>
+<img src="media/15456255866253/15463678930105.jpg" alt="" style="width:400px;"/></p>
+
+<p>麻雀代码：</p>
+
+<pre><code class="language-kotlin">open class MView {
+    var parent: MView? = null
+
+    open fun passIn(ev: MotionEvent) {
+        passOut(ev)
+    }
+
+    open fun passOut(ev: MotionEvent) {
+        parent?.passOut(ev)
+    }
+}
+
+class MViewGroup(private val child: MView) : MView() {
+    init {
+        child.parent = this // 示意写法
+    }
+
+    override fun passIn(ev: MotionEvent) {
+        child.passIn(ev)
+    }
+}
+</code></pre>
+
+<p>这段代码没有问题，非常简单，但是它对需求意图的表达不够清晰，增加了框架的使用难度</p>
+
+<ol>
+<li>如前所述，我们希望<code>passIn</code>的时候只传递事件，希望在<code>passOut</code>的时候每个View决定是否要处理事件，并进行处理，而且在处理事件后，不再调用<code>parent</code>的<code>passOut</code>方法把事件传出来</li>
+<li>你会发现，这其中包含了两类职责，一类是事件传递控制逻辑，另一类是事件处理钩子</li>
+<li>其中事件传递控制逻辑基本不会变化，事件处理的钩子中可能做任何事情</li>
+<li>我们需要把不同职责的代码分开，更需要把变化的和不变的分开，减少框架使用者的关注点</li>
+</ol>
+
+<p>于是我把事件传递控制逻辑放在<code>dispatch</code>方法中，把<code>onTouch</code>方法作为事件处理钩子，而且钩子有一个返回值，表示钩子中是否处理了事件</p>
+
+<pre><code class="language-kotlin">open class MView {
+    open fun dispatch(ev: MotionEvent): Boolean {
+        return onTouch(ev)
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+
+class MViewGroup(private val child: MView) : MView() {
+    override fun dispatch(ev: MotionEvent): Boolean {
+        var handled = child.dispatch(ev)
+        if (!handled) handled = onTouch(ev)
+
+        return handled
+    }
+
+    override fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+</code></pre>
+
+<p>这样写完，你会发现：</p>
+
+<ol>
+<li>控制逻辑集中在<code>dispatch</code>中，一目了然</li>
+<li><code>onTouch</code>单纯是一个钩子，框架使用者只需要关心这个钩子和它的返回值，不用太关心控制流程</li>
+<li>另外，连<code>parent</code>也不需要了</li>
+</ol>
+
+<h3 id="toc_4">1.3.第三次试造</h3>
+
+<p>上文的实现看上去已经初具雏形了，但其实连开始提的那条原则都没实现完，因为原则要求一次操作只能有一个View进行处理，而我们实现的是一个触摸事件只能有一个View进行处理<br/>
+这里就涉及到一次触摸操作和一个触摸事件的区别</p>
+
+<ol>
+<li>假设还没有触摸事件的概念，我们要怎么区分一次触摸操作呢？
+
+<ol>
+<li>把触摸操作细分一下，大概有按下动作、抬起动作、与屏幕接触时的移动和停留动作</li>
+<li>很容易想到，要区分两次触摸操作，可以通过按下和抬起动作进行区分，按下动作开始了一次触摸操作，抬起动作结束了一次触摸，按下和抬起中间的移动和停留都属于这一次触摸操作，至于移动和停留是否要区分，目前没有看到区分的必要，可以都作为触摸中来处理</li>
+</ol></li>
+<li>于是在一次触摸操作中就有了三种动作的类型：<code>DOWN/UP/ING</code>，其中<code>ING</code>有点不够专业，改个名字叫<code>MOVE</code>吧</li>
+<li>而每个触摸动作会在软件系统中产生一个同样类型的触摸事件</li>
+<li>所以最后，一次触摸操作就是由一组从<code>DOWN</code>事件开始、中间是多个<code>MOVE</code>事件、最后结束于<code>UP</code>事件的事件流组成</li>
+</ol>
+
+<p>于是设计原则更确切地说就是：<strong>一次触摸产生的事件流，只能被一个View消费</strong></p>
+
+<p>在上次试造的基础上把一个事件变成一个组事件流，其实非常简单：处理<code>DOWN</code>事件时跟前面处理一个事件时一样，但需要同时记住<code>DOWN</code>事件的消费对象，后续的<code>MOVE/UP</code>事件直接交给它就行了</p>
+
+<p>麻雀代码：</p>
+
+<pre><code class="language-kotlin">open class MView {
+    open fun dispatch(ev: MotionEvent): Boolean {
+        return onTouch(ev)
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+
+class MViewGroup(private val child: MView) : MView() {
+    private var isChildNeedEvent = false
+
+    override fun dispatch(ev: MotionEvent): Boolean {
+        var handled = false
+        
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            clearStatus()
+        
+            handled = child.dispatch(ev)
+            if (handled) isChildNeedEvent = true
+
+            if (!handled) handled = onTouch(ev)
+        } else {
+            if (isChildNeedEvent) handled = child.dispatch(ev)
+            if (!handled) handled = onTouch(ev)
+        }
+        
+        if (ev.actionMasked == MotionEvent.ACTION_UP) {
+            clearStatus()
+        }
+            
+        return handled
+    }
+    
+    private fun clearStatus() {
+        isChildNeedEvent = false
+    }
+
+    override fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+</code></pre>
+
+<ol>
+<li>增加了一个<code>isChildNeedEvent</code>状态，对是子View是否处理了<code>DOWN</code>事件进行记录</li>
+<li>在收到<code>DOWN</code>事件的最开始和收到<code>UP</code>事件的最后，重置状态</li>
+</ol>
+
+<p>此时框架使用者还是只需要关心<code>onTouch</code>钩子，在需要处理事件时进行处理并返回<code>true</code>，其他事情框架都做好了</p>
+
+<h3 id="toc_5">1.4.第四次试造</h3>
+
+<p>上面的框架已经能完成基本的事件分发工作了，但下面这个需求，你尝试一下用现在框架能实现吗？<br/>
+需求：<strong>在可滑动View中有一个可点击View，需要让用户即使按下的位置是可点击View，再进行滑动时，也可以滑动外面的的可滑动View</strong><br/>
+<img src="media/15456255866253/15463679356863.jpg" alt="" style="width:380px;"/><br/>
+这个需求其实非常常见，比如所有「条目可点击的滑动列表」就是这样的（微信/QQ聊天列表）</p>
+
+<p>假如使用上面的框架：</p>
+
+<ol>
+<li>可滑动View会先把事件传到里边的可点击View</li>
+<li>可点击View一看来事件了，我又能点击，那舍我其谁啊</li>
+<li>然后外面的可滑动View就永远无法处理事件，也就无法滑动</li>
+</ol>
+
+<p>所以直接使用现在的模型去实现的「条目可点击的滑动列表」，它会永远滑动不了</p>
+
+<p>那怎么办呢？</p>
+
+<ol>
+<li>难道要让里面的可点击View去感知一下（层层往上找），自己是不是被一个能消费事件的View包裹？是的话自己就不消费事件了？
+
+<ol>
+<li>这肯定是不行的，先不说子View层层反向遍历父亲是不是个好实现，至少不能外面是可以滑动的，里边View的点击事件就全部失效</li>
+</ol></li>
+<li>或者我们调整<code>dispatch</code>方法在传入事件过程中的人设，让它不是只能往里传递事件，而是在自己能消费事件的时候把事件给自己
+
+<ol>
+<li>这肯定也是不行的，跟第一个办法的主要问题一样</li>
+</ol></li>
+</ol>
+
+<p>直接想实现觉得到处是矛盾，找不到突破口，那就从头开始吧，从什么样的触摸反馈是用户觉得自然的出发，看看这种符合直觉的反馈方案是否存在，找出来它是什么，再考虑我们要怎么实现</p>
+
+<ol>
+<li>当用户面对一个滑动View里有一个可点击View，当他摸在可点击View上时，他是要做什么？</li>
+<li>显然，只有两个可能性，要么用户想点这个可点击View，要么用户想滑动这个可滑动View</li>
+<li>那么，当用户刚用手指接触的时候，也就是<code>DOWN</code>事件刚来的时候，能判断用户想干什么吗？很抱歉，不能</li>
+<li>所以，客观条件下，你就是不可能在<code>DOWN</code>事件传过来的时候，判断出用户到底想做什么，于是两个View其实都不能确定自己是否要消费事件</li>
+</ol>
+
+<p><del>我*，这不傻*了吗，还搞什么GUI啊，大家都用命令行吧</del><br/>
+等等，不要着急，GUI还是得搞的，不搞没饭吃的我跟你讲，所以你还是得想想，想尽办法去做到</p>
+
+<p>你先忘记前面说的原则，你想想，不考虑其他因素，也不是只能用<code>DOWN</code>事件，只要你能判断用户的想法就行，你有什么办法</p>
+
+<ol>
+<li>办法肯定是有的，你可以多等一会，看用户接下来的行为能匹配哪种操作模式
+
+<ol>
+<li>点击是这样：用户先<code>DOWN</code>，然后<code>MOVE</code>很小一段，也不会MOVE出这个子View，关键是比较短的时间就<code>UP</code></li>
+<li>滑动是这样：用户先<code>DOWN</code>，然后开始<code>MOVE</code>，这时候可能会MOVE出这个子View，也可能不，但关键是比较长的时间也没有在<code>UP</code>，一直是在<code>MOVE</code></li>
+</ol></li>
+<li>所以你的结论是，<strong>只有<code>DOWN</code>不行，还得看接下来的事件流，得走着瞧</strong></li>
+<li>再多考虑个长按的情况，总结就是：
+
+<ol>
+<li>如果在某个时间内<code>UP</code>，就是点击里边的View</li>
+<li>如果比较长的时间<code>UP</code>，但没怎么<code>MOVE</code>，就是长按里边的View</li>
+<li>如果在比较短的时间<code>MOVE</code>比较长的距离，就是滑动外面的View</li>
+</ol></li>
+</ol>
+
+<p>看上去这个方案很不错，安排得明明白白，但我们现有的事件处理框架实现不了这样的判断方案，存在以下冲突点：</p>
+
+<ol>
+<li>因为你无法在<code>DOWN</code>的时候判断当前事件流的归属，所以一开始子View和父View都只能返回<code>false</code>，但为了能对后续事件做判断，你又希望事件继续流过它们，这就与当前的框架冲突了</li>
+<li>然后事件流了一会，子View和父View可能都会对事件的归属做出自己的判断，然后就看谁先下手消费事件，下手早的就需要通知另一方你下手晚了，我先要了，但问题来了：
+
+<ol>
+<li>如果子View先下手，就要通知父View别要事件了，这比较简单，就是返回<code>true</code>，不与当前框架冲突</li>
+<li>如果父View要了事件，要通知子View别要了，目前的框架是做不到的，做的话需要调整dispatch在传入事件过程中的人设，需要能在往里传递事件前加一个拦截，能够看情况直接给自己的onTouch处理</li>
+</ol></li>
+</ol>
+
+<p>所以要实现这个判断方案，就肯定要对现在的事件处理框架进行修改，而且看上去一不小心就会大改</p>
+
+<ol>
+<li>仔细想想，大概有这样两个改动相对小的思路：
+
+<ol>
+<li>思路一：
+
+<ol>
+<li>当事件走到可滑动父View的时候，它先处理事件，并且把事件攒着</li>
+<li>当攒了几个事件，判断出不是自己要的时候，再把事件一股脑给子View，触发里边的点击事件</li>
+</ol></li>
+<li>思路二：
+
+<ol>
+<li>当事件走到到可滑动父View的时候，它先把事件往里传，里边可能会处理事件，可能不会，可滑动父View都先不关心</li>
+<li>但可滑动父View也不是放手不管，它开始暗中观察
+
+<ol>
+<li>假如里边处理事件，它就会绷紧神经准备伺机而动，先观察事件是不是符合触发自己消费事件的模式，一旦发现符合条件的事件模式，它就把事件拦截下来，即使里边在处理，它也不往里<code>disptach</code>了，而是直接给自己的<code>onTouch</code></li>
+<li>假如里边不处理事件，那啥问题没有，它直接处理事件就好了</li>
+</ol></li>
+</ol></li>
+</ol></li>
+<li>两个思路总结一下：
+
+<ol>
+<li>思路一：外面的父View先拦事件，如果判断拦错了，再把事件往里发</li>
+<li>思路二：外面的父View先不拦事件，在判断应该拦的时候，突然把事件拦下来</li>
+</ol></li>
+<li>这两个思路看似都要对当前框架做改变，看似差不多，但其实还是有比较明显的优劣的
+
+<ol>
+<li>思路一问题比较明显：
+
+<ol>
+<li>父View把事件拦下来了，然后发现拦错了再给子View，但其实子View又并不一定能消费事件，这不就是白做一步吗</li>
+<li>等到子View不处理事件，又把事件们还给父View，它还得继续处理事件</li>
+<li>整个过程不仅繁琐，而且会让开发者感觉到别扭</li>
+<li>所以这个思路是不行的，还得是把事件先给子View</li>
+</ol></li>
+<li>思路二就相对正常多了，只有一个问题（下一节再讲，你可以猜一猜，这里我先当没发现），而且框架要做的改变也很少：
+
+<ol>
+<li>父View在往里<code>dispatch</code>事件前，增加一个分析拦截方法，开发者可以覆写这个方法，加入自己的事件模式分析代码，并且可以在确定要拦截的时候进行拦截
+
+<ol>
+<li>把分析拦截逻辑抽成一个方法非常合理：什么时候拦，什么时候不拦，内里的逻辑很多，但对外暴露的API可以很小，非常适合抽出去</li>
+</ol></li>
+<li>在确定自己要拦截事件的时候，即使里边在一开始消费了事件，也不把事件往里传了，直接给自己的<code>onTouch</code></li>
+</ol></li>
+</ol></li>
+</ol>
+
+<p>示意图：<br/>
+<img src="media/15456255866253/15463679714860.jpg" alt="" style="width:400px;"/></p>
+
+<p>于是使用思路二，能写出以下代码：</p>
+
+<pre><code class="language-kotlin">open class MView {
+    open fun dispatch(ev: MotionEvent): Boolean {
+        return onTouch(ev)
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+
+class MViewGroup(private val child: MView) : MView() {
+    private var isChildNeedEvent = false
+    private var isSelfNeedEvent = false
+
+    override fun dispatch(ev: MotionEvent): Boolean {
+        var handled = false
+
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            clearStatus()
+            
+            if (onIntercept(ev)) {
+                isSelfNeedEvent = true
+                handled = onTouch(ev)
+            } else {
+                handled = child.dispatch(ev)
+                if (handled) isChildNeedEvent = true
+
+                if (!handled) {
+                    handled = onTouch(ev)
+                    if (handled) isSelfNeedEvent = true
+                }
+            }
+        } else {
+            if (isSelfNeedEvent) {
+                handled = onTouch(ev)
+            } else if (isChildNeedEvent) {
+                if (onIntercept(ev)) {
+                    isSelfNeedEvent = true
+                    handled = onTouch(ev)
+                } else {
+                    handled = child.dispatch(ev)
+                }
+            }
+        }
+
+        if (ev.actionMasked == MotionEvent.ACTION_UP) {
+            clearStatus()
+        }
+        
+        return handled
+    }
+
+    private fun clearStatus() {
+        isChildNeedEvent = false
+        isSelfNeedEvent = false
+    }
+
+    override fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+
+    open fun onIntercept(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+</code></pre>
+
+<p>写的过程中增加了一些对细节的处理：</p>
+
+<ol>
+<li>不仅是在<code>DOWN</code>事件的<code>dispatch</code>前需要拦截，在后续事件中，也需要加入拦截，否则无法实现中途拦截的目标</li>
+<li>在某一个事件判断拦截之后，还需要在后续事件中再判断一次是否要拦截吗？
+
+<ol>
+<li>完全不需要，我们希望的就是在一次触摸中，尽可能只有1个对象去消费事件，决定是你了，那就不要变</li>
+<li>所以增加一个<code>isSelfNeedEvent</code>记录自己是否拦截过事件，如果拦截过，后续事件直接就交给自己处理</li>
+</ol></li>
+<li>在后续事件时，子View没有处理事件，外面也不再处理了，同样因为只能有一个View处理，（Actvity会处理这样的事件，后面会提到）</li>
+</ol>
+
+<p>这一下代码是不是看上去瞬间复杂了，但其实只是增加了一个事件拦截机制，对比上一次试造的轮子，会更容易理解（要是Markdown支持代码块内自定义着色就好了）<br/>
+而且对于框架的使用者来说，关注点一样非常少</p>
+
+<ol>
+<li>重写<code>onIntercept</code>方法，判断什么时候需要拦截事件，需要拦截时返回<code>true</code></li>
+<li>重写<code>onTouch</code>方法，如果处理了事件，返回<code>true</code></li>
+</ol>
+
+<h3 id="toc_6">1.5.第五次试造</h3>
+
+<p>上面的处理思路虽然实现了需求，但可能会导致一个问题：里边的子View接收了一半的事件，可能都已经开始处理并做了一些事情，父View忽然就不把后续事件给它了，会不会违背用户操作的直觉？甚至出现更奇怪的现象？</p>
+
+<!--但会造成一个非常明显的与原则违背的情况，那就是可能不止一个View会消费到事件，两个View，三个View，甚至极端情况多个View都有可能
+（因为两个和多个是一样的，下文只用两个View的情况举例）-->
+
+<p>这个问题确实比较麻烦，分两类情况讨论</p>
+
+<ol>
+<li>里边的View接收了一半事件，但还没有开始处理，或者在进行可以被取消的处理
+
+<ol>
+<li>比如对于一个可点击的View，View的默认实现是只要被touch了，就会有<code>pressed</code>状态，如果你设置了对应的<code>background</code>，你的View就会有高亮效果</li>
+<li>这种高亮即使被中断也没事，不会让用户感觉到奇怪，不信你自己试试微信的聊天列表</li>
+<li>但一个值得注意的点是，如果你只是直接不发送<code>MOVE</code>事件了，这会有问题，就这个按下高亮的例子，如果你只是不传<code>MOVE</code>事件了，那谁来告诉里边的子View取消高亮呢？所以你需要在中断的时候也传一个结束事件
+
+<ol>
+<li>但是，你能直接传一个<code>UP</code>事件吗？也是不行的，因为这样就匹配了里边点击的模式了，会直接触发一个点击事件，这显然不是我们想要的</li>
+<li>于是外面需要给一个新的事件，这个事件的类型就叫取消事件好了<code>CANCEL</code></li>
+</ol></li>
+<li>总结一下，对于这种简单的可被取消情况，你可以这样去处理：
+
+<ol>
+<li>在确定要拦截的时候，在把真正的事件转发给自己的<code>onTouch</code>的同时，另外生成一个新的事件发给自己的子View，事件类型是<code>CANCEL</code>，它将是子View收到的最后一个事件</li>
+<li>子View可以在收到这个事件后，对当前的一些行为进行取消</li>
+</ol></li>
+</ol></li>
+<li>里边的View接收了一半事件，已经开始处理了，而且最好不要去取消，或者取消了会显得很怪
+
+<ol>
+<li>这个时候，事情会复杂一些，而且这个场景发生的远比你想象中的多，形式也多种多样，不处理好的后果也比只是让用户感觉上奇怪要严重得多，可能会有的功能会实现不了，下面举两个例子
+
+<ol>
+<li>在<code>ViewPager</code>里有三个page，page里是<code>ScrollView</code>，<code>ViewPager</code>可以横向滑动，page里的<code>ScrollView</code>可以竖向滑动
+
+<ol>
+<li>如果按前面逻辑，当<code>ViewPager</code>把事件给里边<code>ScrollView</code>之后，它也会偷偷观察，如果你一直是竖向滑动，那没话说，<code>ViewPager</code>不会触发拦截事件</li>
+<li>但如果你竖着滑着滑着，手抖了，开始横滑（或者只是斜滑），<code>ViewPager</code>就会开始紧张，想「组织终于决定是我了吗？真的假的，那我可就不客气了」，于是在你斜滑一定距离之后，忽然发现，你划不动<code>ScrollView</code>了，而<code>ViewPager</code>开始动</li>
+<li>原因就是<code>ScrollView</code>的竖滑被取消了，<code>ViewPager</code>把事件拦下来，开始横滑</li>
+<li>这个体验还是比较怪的，会有种过于灵敏的感觉，会让用户只能小心翼翼地滑动</li>
+</ol></li>
+<li>在一个<code>ScrollView</code>里有一些按钮，按钮有长按事件，长按再拖动就可以移动按钮
+
+<ol>
+<li>（更常见的例子是一个列表，里边的条目可以长按拖动）</li>
+<li>同样按前面的逻辑，当你长按后准备拖动按钮时，你怎么保证不让<code>ScrollView</code>把事件拦下来呢？</li>
+</ol></li>
+</ol></li>
+<li>所以这类问题是一定要解决的，但要怎么解决呢
+
+<ol>
+<li>还是先从业务上看，从用户的角度看，当里边已经开始做一些特殊处理了，外面应不应该把事件抢走？
+
+<ol>
+<li>不应该对吧，OK，解决方针就是不应该让外边的View抢事件</li>
+</ol></li>
+<li>所以接下来的问题是：谁先判断出外边的View不该抢事件，里边的子View还是外边的父View？然后怎么不让外边的View抢？
+
+<ol>
+<li>首先，肯定是里边的View做出判断：这个事件，真的，外边的View你最好别抢，要不用户不开心了</li>
+<li>然后里边就得告知外边，你别抢了，告知可以有几个方式
+
+<ol>
+<li>外边抢之前问一下里边，我能不能抢</li>
+<li>里边在确定这个事件不能被抢之后，从<code>dispatch</code>方法返回一个特别的值给外边（之前只是<code>true</code>和<code>false</code>，现在要加一个）</li>
+<li>里边通过别的方式通知外边，你不要抢</li>
+</ol></li>
+<li>讲道理，我觉得三个方式都行，但第三个方式最为简单直接，而且不用改之前的大逻辑，Android也使用了这个方式，父View给子View提供了一个方法<code>requestDisallowInterceptTouchEvent</code>，子View调用它改变父View的一个状态，然后父View每次在准备拦截前都会判断这个状态，当然这个状态只对当前事件流有效</li>
+<li>然后，这个情况还得再注意一点，它应该是向外递归的，也就是，在复杂的情况中，有可能有多个上级在暗中观察，当里边的View决定要处理事件而且不准备交出去的时候，外面所有的暗中观察的父View都应该把脑袋转回去</li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol>
+
+<!--但如果你竖着滑着滑着，手抖了，开始横滑（或者只是斜滑），`ViewPager`就会开始紧张，想「主人你这是要临幸我吗？真的假的，那我可就不客气了」，于是在你斜滑一定距离之后，忽然发现，你划不动`ScrollView`了，而`ViewPager`开始动-->
+
+<p>所以，连同上一次试造，总结一下</p>
+
+<ol>
+<li>对于多个可消费事件的View进行嵌套的情况，怎么判定事件的归属会变得非常麻烦，无法立刻在<code>DOWN</code>事件时就确定，只能在后续的事件流中进一步判断</li>
+<li>于是在没判断归属的时候，先由里边的子View消费事件，外面暗中观察，然后两方同时对事件类型做进一步匹配，并准备在匹配成功后对事件归属进行抢拍</li>
+<li>抢拍是先抢先得
+
+<ol>
+<li>父亲先抢到，发个<code>CANCEL</code>事件给儿子就完了</li>
+<li>儿子先抢到，就得大喊大叫，撒泼耍赖，爸爸们行行好吧，最后得以安心处理事件</li>
+</ol></li>
+</ol>
+
+<p>另外有几个值得一提的地方：</p>
+
+<ol>
+<li>这种先抢先得的方式感觉上有点乱来是吧，但也没有更好的办法了，一般都是调试者自己根据实际用户体验调整，让父亲或儿子，在最适合的时机准确及时地抢到应得的事件</li>
+<li>父View在拦截下事件后，把接下来的事件传给<code>onTouch</code>，<code>onTouch</code>只会收到后半部分的事件，这样会不会有问题呢？
+
+<ol>
+<li>确实直接给后半部分会有问题，所以一般情况是，在没拦截的时候就做好如果要处理事件的一些准备工作，以便之后拦截事件了，只使用后半部分事件也能实现符合用户直觉的反馈</li>
+</ol></li>
+</ol>
+
+<!--（@@@上面第一点这块是这样吗？）-->
+
+<!--1. 源码对于在可滑动View中的子View这种情况，还进一步做了一处体验上的优化：
+    - 正常里边的子View在按下就会直接显示按下状态，只是只有在马上抬起时才表现为点击，如果只是`MOVE`不抬起，那就是滑外面了，就取消按下状态
+    - 这样可行，但Android觉得这个体验还是不够好，于是会让里边的子View感知自己是不是在一个可滑动View里边，如果是的话，它不会下按下直接显示按下状态，而是稍微晚那么一点点显示出啦，提升了一点用户体验-->
+
+<p>到现在，代码就跟一开始贴出的麻雀一模一样了：</p>
+
+<pre><code class="language-kotlin">interface ViewParent {
+    fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean)
+}
+
+open class MView {
+    var parent: ViewParent? = null
+
+    open fun dispatch(ev: MotionEvent): Boolean {
+        return onTouch(ev)
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+
+open class MViewGroup(private val child: MView) : MView(), ViewParent {
+    private var isChildNeedEvent = false
+    private var isSelfNeedEvent = false
+    private var isDisallowIntercept = false
+
+    init {
+        child.parent = this
+    }
+
+    override fun dispatch(ev: MotionEvent): Boolean {
+        var handled = false
+        
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            clearStatus()
+            
+            // add isDisallowIntercept
+            if (!isDisallowIntercept &amp;&amp; onIntercept(ev)) {
+                isSelfNeedEvent = true
+                handled = onTouch(ev)
+            } else {
+                handled = child.dispatch(ev)
+                if (handled) isChildNeedEvent = true
+
+                if (!handled) {
+                    handled = onTouch(ev)
+                    if (handled) isSelfNeedEvent = true
+                }
+            }
+        } else {
+            if (isSelfNeedEvent) {
+                handled = onTouch(ev)
+            } else if (isChildNeedEvent) {
+                // add isDisallowIntercept
+                if (!isDisallowIntercept &amp;&amp; onIntercept(ev)) {
+                    isSelfNeedEvent = true
+
+                    // add cancel
+                    val cancel = MotionEvent.obtain(ev)
+                    cancel.action = MotionEvent.ACTION_CANCEL
+                    handled = child.dispatch(cancel)
+                    cancel.recycle()
+                } else {
+                    handled = child.dispatch(ev)
+                }
+            }
+        }
+        
+        if (ev.actionMasked == MotionEvent.ACTION_UP 
+            || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
+            clearStatus()
+        }
+        
+        return handled
+    }
+    
+    private fun clearStatus() {
+        isChildNeedEvent = false
+        isSelfNeedEvent = false
+        isDisallowIntercept = false
+    }
+
+    override fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+
+    open fun onIntercept(ev: MotionEvent): Boolean {
+        return false
+    }
+
+    override fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean) {
+        this.isDisallowIntercept = isDisallowIntercept
+        parent?.requestDisallowInterceptTouchEvent(isDisallowIntercept)
+    }
+}
+</code></pre>
+
+<p>这次改动主要是增加了发出<code>CANCEL</code>事件和<code>requestDisallowInterceptTouchEvent</code>机制</p>
+
+<ol>
+<li>在发出<code>CANCEL</code>事件时有一个细节：没有在给child分发<code>CANCEL</code>事件的同时继续把原事件分发给自己的<code>onTouch</code>
+
+<ol>
+<li>这是源码中的写法，不是我故意的，可能是为了让一个事件也只能有一个View处理，避免出现bug</li>
+</ol></li>
+<li>实现<code>requestDisallowInterceptTouchEvent</code>机制时，增加了<code>ViewParent</code>接口
+
+<ol>
+<li>不使用这种写法也行，但使用它从代码整洁的角度看会更优雅，比如避免反向依赖，而且这也是源码的写法，于是直接搬来了</li>
+</ol></li>
+</ol>
+
+<p>虽然目前整个框架的代码有点复杂，但对于使用者来说，依然非常简单，只是在上一版框架的基础上增加了：</p>
+
+<ol>
+<li>如果View判断自己要消费事件，而且执行的是不希望被父View打断的操作时，需要立刻调用父View的<code>requestDisallowInterceptTouchEvent</code>方法</li>
+<li>如果在<code>onTouch</code>方法中对事件消费并且做了一些操作，需要注意在收到<code>CANCEL</code>事件时，对操作进行取消</li>
+</ol>
+
+<p>到这里，事件分发的主要逻辑已经讲清楚了，不过还差一段Activity中的处理，其实它做的事情类似ViewGroup，只有这几个区别：</p>
+
+<ol>
+<li>不会对事件进行拦截</li>
+<li>只要有子View没有处理的事件，它都会交给自己的<code>onTouch</code></li>
+</ol>
+
+<p>所以补上Activity的麻雀：</p>
+
+<pre><code class="language-kotlin">open class MActivity(private val childGroup: MViewGroup) {
+    private var isChildNeedEvent = false
+    private var isSelfNeedEvent = false
+
+    open fun dispatch(ev: MotionEvent): Boolean {
+        var handled = false
+
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            clearStatus()
+
+            handled = childGroup.dispatch(ev)
+            if (handled) isChildNeedEvent = true
+
+            if (!handled) {
+                handled = onTouch(ev)
+                if (handled) isSelfNeedEvent = true
+            }
+        } else {
+            if (isSelfNeedEvent) {
+                handled = onTouch(ev)
+            } else if (isChildNeedEvent) {
+                handled = childGroup.dispatch(ev)
+            }
+
+            if (!handled) handled = onTouch(ev)
+        }
+
+        if (ev.actionMasked == MotionEvent.ACTION_UP
+            || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
+            clearStatus()
+        }
+
+        return handled
+    }
+
+    private fun clearStatus() {
+        isChildNeedEvent = false
+        isSelfNeedEvent = false
+    }
+
+    open fun onTouch(ev: MotionEvent): Boolean {
+        return false
+    }
+}
+</code></pre>
+
+<h3 id="toc_7">1.6.总结</h3>
+
+<p>到这里，我们终于造好了一个粗糙但不劣质的轮子，源码的主要逻辑与它的区别不大，具体区别大概有：<code>TouchTarget</code>机制、多点触控机制、<code>nested scroll</code>、处理各种<code>listener</code>、结合View的状态进行处理等，相比主要逻辑，它们就没有那么重要了，之后有空会写关于多点触控和<code>TouchTarget</code>的内容<del>（看！热腾腾的坑！）</del></p>
+
+<p>所以回头看，你会发现事件分发其实很简单，它的关键不在于「不同的事件类型、不同的View种类、不同的回调方法、方法不同的返回值」对事件分发是怎么影响的<br/>
+关键在于<strong>「它要实现什么功能？对实现效果有什么要求？使用了什么解决方案？」</strong>，从这个角度，就能清晰而且简单地把事件分发整个流程梳理清楚</p>
+
+<p>事件分发要实现的功能是：让合适的View去消费触摸事件，对用户的操作进行反馈，使之符合用户的直觉</p>
+
+<p>从用户的直觉出发能得到这么两个要求</p>
+
+<ol>
+<li>用户的一次操作只有一个View去消费</li>
+<li>让消费事件的View跟用户的意图一致</li>
+</ol>
+
+<p>第二个要求是最难的，如果有多个View都可以消费触摸事件，怎么判定哪个View更适合消费，并且把事件交给它<br/>
+于是简单但有效地使用了一套先到先得的策略，让多个可消费触摸事件的View拥有近乎平等的竞争消费者的资格：它们都能接收到事件，并在自己判定应该消费事件的时候去发起竞争申请，申请成功后事件就全部由它消费</p>
+
+<h2 id="toc_8">2.测试轮子</h2>
+
+<p>可能有人会问，听你纸上谈兵了半天，你讲的真的跟源码一样吗，这要是不对我不是亏大了<br/>
+问的好，所以接下来我会使用一个测试事件分发的日志测试框架对这个小麻雀进行简单的测试，而且后面还会有实践部分真刀真枪地把上面讲过的东西练起来<br/>
+@@@</p>
+
+<h2 id="toc_9">3.实践</h2>
+
+<p>实际上进行事件分发的实践时，会包括两方面内容：</p>
+
+<ol>
+<li>一方面是就是控制事件的分发。这也是本文讲的主要内容，这NestedScrolling部分基本得靠自己对事件分发的认识然后自己手写</li>
+<li>另一方面是对事件的处理。核心内容是手势的识别，比如识别用户的操作是单击、双击、长按、滑动，这部分也可以自己手写，不会太难，但一般场景中我们都可以使用SDK提供的十分好用的帮助类<code>GestureDetector</code>，它用起来非常方便</li>
+</ol>
+
+<p>所以下面的实践虽然会包含这两方面，但关键是怎么控制事件的分发，对手势的识别不是重点，我也会选择比较简单的</p>
+
+<h3 id="toc_10">3.1.选题</h3>
+
+<p>前面说了，事件分发的难点是有多个View都可以消费触摸事件的情况，这种情况一般被称为冲突，比如以前常见的<code>ScrollView</code>嵌套滑动冲突。除此之外，我们也提到过点击和滑动的冲突，但系统早就在<code>View</code>和<code>ViewGroup</code>里把这种情况给处理好了，要了解的同学可以直接去看源码。当然也还有很多其他类型的冲突，但下面还是准备讲跟滑动有关的冲突，它相对更加常见，虽然现在<code>NestedScrolling</code>机制已经把同向滑动冲突处理得非常优秀了，但某些场景下这种机制也会有一些小缺点，在下面要讲的例子里你就能看到它的小缺点们</p>
+
+<!--
+前面说了，事件分发的难点是有多个View都可以消费触摸事件的情况，这种情况一般被称为冲突，比如以前常见的`ScrollView`嵌套滑动冲突。除此之外，我们也提到过点击和滑动的冲突，但系统早就在`View`和`ViewGroup`里把这种情况给处理好了，要了解的同学可以直接去看源码。当然也还有很多其他类型的冲突，但下面还是准备讲跟滑动有关的冲突，它相对更加常见一些，虽然现在`NestedScrolling`机制已经把同向滑动冲突处理得非常优秀了，但某些场景下它也会有一些小缺点，而且滑动冲突的场景可以非常丰富，处理起来非常灵活，比较值得一讲
+
+3.1.方向不同的嵌套滑动
+
+这是一个非常常见的情况，处理起来也比较容易
+
+3.2.方向相同的嵌套滑动
+
+3.3.可滑动View中的长按拖动
+
+3.4.悬停布局
+-->
+
+<p>所以最后本文选择的实践例子是：悬停布局<br/>
+你叫它粘性布局、悬浮布局、折叠布局都行，总之它理想的效果应该是这样：<br/>
+<img src="media/15456255866253/2019-01-03_00-03-20%20-1-.gif" alt="" style="width:320px;"/></p>
+
+<p>用文字描述是这样：</p>
+
+<ol>
+<li>页面内容分为Header、悬停区和内容区，其中内容区可以左右滑动，有多个Tab页，而且每个Tab页是允许上下滑动的</li>
+<li>用户向上滑动时，先折叠Header，当Header全部折叠收起后，悬停区悬停不动，内容区向上滑动</li>
+<li>用户向下滑动时，先把内容区向下滑动，然后展开Header，悬停区顺势下移</li>
+<li>其中内容区的滑动和Header的收起展开在用户连续滑动时应该表现为连续的，甚至在用户滑动中快速抬起时，滑动的惯性也需要在两个动作间保持连续</li>
+</ol>
+
+<p>在当前这个时间点（2019.1.1），这个例子还有不少实际意义，因为它虽然是比较常见的一个交互效果，但现在市场上的主流APP，居然是这样的...（饿了么v8.9.3）<br/>
+<img src="media/15456255866253/2019-01-02_03-26-12%20-2-.gif" alt="" style="width:300px;"/><br/>
+这样的...（知乎v5.32.2）<br/>
+<img src="media/15456255866253/2019-01-02_03-48-02%20-1-.gif" alt="" style="width:300px;"/><br/>
+这样的...（腾讯课堂v3.24.0.5）<br/>
+<img src="media/15456255866253/2019-01-02_04-13-04%20-1-.gif" alt="" style="width:300px;"/><br/>
+这样的...（哔哩哔哩v5.36.0）<br/>
+<img src="media/15456255866253/2019-01-02_04-01-41%20-1-.gif" alt="" style="width:300px;"/><br/>
+（可以加上个奇怪的个人主页@@@）<br/>
+<img src="media/15456255866253/15463731835178.jpg" alt=""/></p>
+
+<p>其中哔哩哔哩的视频详情页和美团（没有贴图）算是做得最好的，滑动连续惯性也连续，但也存在两个小瑕疵：在Header部分上下滑动时你可以同时进行左右滑动；在惯性滑动没有停止的时候无法进行左右滑动<br/>
+而腾讯课堂的问题是最普遍的：惯性不连续<br/>
+最奇葩是饿了么的店铺首页和知乎的Live详情页，都是创收的页面啊，居然能自带鬼畜，好吧，也是心大<br/>
+其他还有一些千奇百怪的bug就不举例了</p>
+
+<p>所以，就让我们来看看，这个功能实现起来是不是真有那么难<br/>
+（然而并不难，下面会有50行的类哔哩哔哩的实现以及100行的无bug实现@@@去掉这句）</p>
+
+<h3 id="toc_11">3.2.需求分析</h3>
+
+<p>如果内容区只有一个Tab页，一种简单直接的实现思路是：页面整个就是一个滑动控件，悬停区域会在滑动过程中不断调整自己的位置，实现悬停的效果<br/>
+它的实现非常简单，效果也完全符合要求，不举例了，可以自己试试</p>
+
+<p>但这里的需求是有多个Tab页，它用一整个滑动控件的思路是无法实现的，需要用多个滑动控件配合实现</p>
+
+<ol>
+<li>先看看有哪些滑动控件：每个Tab页内肯定是独立的滑动控件，要实现Header的展开收起，可以把整个容器作为一个滑动控件</li>
+<li>这就变成了一个外部滑动控件和一组内部滑动控件进行配合，看上去有点复杂，但实际上在一次用户滑动过程中，只有一个外部滑动控件和一个内部滑动控件进行配合</li>
+<li>配合过程是这样的（可以回头看下前面的理想效果动态图）：
+
+<ol>
+<li>用户上滑，外部滑动控件先消费事件进行上滑，直到滑动到Header的底部，外部滑动控件滑动结束，把滑动事件交给内部滑动控件，内部滑动控件继续滑动</li>
+<li>用户下滑，内部滑动控件先消费事件进行下滑，直到滑动到内部控件的顶部，内部滑动控件滑动结束，把滑动事件交给外部滑动控件，外部滑动控件继续滑动</li>
+<li>当用户滑动过程中快速抬起进行惯性滑动的时候，也需要遵循上面的配合规律</li>
+</ol></li>
+</ol>
+
+<p>乍一听你可能觉得这个需求不太对劲，确实，从大的角度看，用户的一次触摸操作，却让多个View先后对其进行消费，它违背了我们最初的原则，也超出了Android触摸事件处理框架提供的功能：父View没用完的事件子View继续用，子View没用完的事件父View继续用</p>
+
+<p>但具体到这个需求中</p>
+
+<ol>
+<li>首先，两个滑动控件配合消费事件的期望效果是，同内容区只有一个Tab页一样，让用户感知上认为自己在滑动一整个控件，只是其中某个部分会悬停，它并没有违背用户的直觉。所以，经过精心设计，多个View消费同一个事件流，也是可以符合用户直觉的，在这个领域表现最突出的就是<code>CoordinatorLayout</code>了，它就是用来帮助开发者去实现他们精心设计的多个View消费同一个事件流的效果的</li>
+<li>然后，由于滑动反馈的简单性，让多个滑动控件的滑动进行配合也是能够做到的。你可以自己实现，也可以借助API 21（已加入V4兼容包）开始提供的<code>NestedScrolling</code>机制，它提供了一种优雅解决嵌套滑动问题的方案，方案的核心就是让多个滑动控件配合滑动，所以使用它也能实现这里的需求，另外<code>CoordinatorLayout</code>让多个滑动控件配合对同一个事件流进行消费也是使用了<code>NestedScrolling</code>机制</li>
+</ol>
+
+<p>OK，既然需求提得没问题，而且我们也能实现，那下面就来看看具体要怎么实现</p>
+
+<h3 id="toc_12">3.3.需求实现</h3>
+
+<p>可能有同学马上就举手了：我知道我知道，用<code>CoordinatorLayout</code>！<br/>
+对，当前这个效果最常见的实现方式就是使用基于<code>CoordinatorLayout</code>的<code>AppBarLayout</code>全家桶，这是它的自带效果，通过简单配置就能实现，而且还附送更多其他特效，非常酷炫，前面看到的效果比较好的哔哩哔哩视频详情页就是用它实现的<br/>
+而<code>AppBarLayout</code>实现这个功能的方式其实是使用了<code>CoordinatorLayout</code>提供的<code>NestedScrolling</code>机制，如果你嫌弃<code>AppBarLayout</code>全家桶太重了，只想单独实现悬停功能，如前文所述，你也可以直接使用<code>NestedScrolling</code>机制去实现</p>
+
+<p>这里就先使用<code>NestedScrolling</code>机制来实现出一个类似哔哩哔哩这样效果的悬停布局吧</p>
+
+<h4 id="toc_13">3.3.2.使用 NestedScrolling 机制实现悬停布局</h4>
+
+<p>如果有对<code>NestedScrolling</code>机制还不是很了解的同学，可以参考@@@这篇透镜文章</p>
+
+<p><code>NestedScrolling</code>机制帮我们做了太多事情，我们只需要实现一个简单的 <code>ns parent</code> 就好了<br/>
+代码简单得我都不想多说了，关键代码就是这些，完整代码可以看这里：</p>
+
+<p>另外，第一版的<code>NestedScrolling</code>机制惯性不连续，第二版虽然也有其他Bug，但是已经不会影响到这个项目中的体验了，所以能用第三版机制最好，用第二版也没问题</p>
+
+<p>实现效果是这样：</p>
+
+<h4 id="toc_14">3.3.3.使用外部 View 主导手动实现悬停布局</h4>
+
+<p>上面使用<code>NestedScrolling</code>机制的实现非常简单，而且效果也不错<br/>
+但如果你要追求更好的效果和体验，这个通用的机制可能就做不到了</p>
+
+<p>比如上面我们看到的哔哩哔哩视频页，能看到与<code>ViewPager</code>有点不太配合<br/>
+同时对于@@@类似美团这样头图特别长的页面，滑动头图不会带动整个下面滑动，也是比较影响体验的一件事</p>
+
+<p>那怎么办，对于</p>
+
+<p>但如果我们要做这些事情，别忘了我们也可以手动去做</p>
+
+<p>手动做还是有两种思路，一种是判断是否拦截事件，另一种是就是拦截然后外部控制</p>
+
+<h2 id="toc_15">4.附录</h2>
+
+<p>4.1.事件分发经典伪代码</p>
+
+<pre><code class="language-java">public boolean dispatchTouchEvent(MotionEvent event) {
+    boolean consume = false;
+    if (onInterceptTouchEvent(event)) {
+        consume = onTouchEvent(event);
+    } else {
+        consume = child.dispatchTouchEvent(event);
+    }
+    return consume;
+}
+</code></pre>
+
+			</div>
+
+		
+	  
+		<footer>
+		 <p class="meta">
+
+			<strong>Categories:</strong>&nbsp; 
+			<span class="categories">
+			
+			    <a class='category' href='LensSeries.html'>LensSeries</a>&nbsp;
+			 
+			</span>
+		    </p>
+		    <p class="meta">
+		      
+		 </p>
+	    
+		<div class="sharing">
+		  
+          
+
+          
+
+		</div>
+
+	    <p class="meta">
+	    
+	        <a class="basic-alignment left" href="15467469615604.html" 
+	        title="Previous Post: 【透镜系列】看穿 NestedScrolling 机制">&laquo; 【透镜系列】看穿 NestedScrolling 机制</a>
+	    
+	    
+	    </p>
+	  </footer>
+	</article>
+</div>
+ <aside class="sidebar"> 
+
+	<section>
+	  <h1>Categories</h1>
+	  <ul id="recent_posts">
+	  
+	      <li class="post">
+	        <a href="LensSeries.html"><strong>LensSeries&nbsp;(2)</strong></a>
+	        
+	        
+	        
+	      </li>
+	   
+	  </ul>
+	</section>
+	<section>
+	  <h1>Recent Posts</h1>
+	  <ul id="recent_posts">
+	  
+	      
+		      <li class="post">
+		        <a href="15467469615604.html">【透镜系列】看穿 NestedScrolling 机制</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
+		        <a href="15456255866253.html">【透镜系列】看穿 事件分发</a>
+		      </li>
+	     
+	   
+	  </ul>
+	</section>
+	
+</aside> </div></div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 -  -
+  <span class="credit">Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; Theme by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+
+  
+    
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+<div id="vcomments"></div>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'fnTU2upQ0TyY3nweOUj5G2Ht-gzGzoHsz',
+        appKey: 'UcOPNcgGvlpqvrGosTlH4jSY',
+        placeholder: '来都来了',
+        visitor: true
+    })
+</script>
+</body>
+</html>
