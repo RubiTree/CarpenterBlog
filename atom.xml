@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-10T01:47:08+08:00</updated>
+  <updated>2019-01-10T01:52:41+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -119,7 +119,7 @@
 
 <h3 id="toc_2">1.2. 分析问题原因</h3>
 
-<!--（本文涉及事件分发的内容比较多，强烈建议对事件分发不是很了解的同学先阅读另一篇透镜的理论部分：@@@）-->
+<p>（温馨提示：本文涉及事件分发的内容比较多，强烈建议对事件分发不是很了解的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 事件分发》</a>的理论部分）</p>
 
 <p>如果你熟悉 Android 的触摸事件分发机制，那么原因很好理解：两个<code>ScrollView</code>嵌套时，滑动距离终于达到滑动手势判定阈值（<code>mTouchSlop</code>）的这个<code>MOVE</code>事件，会先经过父 View 的<code>onInterceptTouchEvent()</code>方法，父 View 于是直接把事件拦截，子 View 的<code>onTouchEvent()</code>方法里虽然也会在判定滑动距离足够后调用<code>requestDisallowInterceptTouchEvent(true)</code>，但始终要晚一步。</p>
 
@@ -325,7 +325,7 @@ private fun isScrollToBottom(): Boolean {
 
 <ol>
 <li>以上过程参考当前最新的<code>androidx.core 1.1.0-alpha01</code>中的<code>NestedScrollView</code>和<code>androidx.recyclerView 1.1.0-alpha01</code>中的<code>RecyclerView</code>实现，与之前的版本细节略有不同，后文会详述其中差异</li>
-<li>为了理解上的方便，有一处细节的描述做了简化：其实在<code>NestedScrollView</code>、<code>RecyclerView</code>这类经典实现中，在判断出滑动手势之前，就可能拦截事件流。具体可以关注源码中的 <code>mIsBeingDragged</code> 字段，在 <code>ns child</code> 滚动时，只要用户一按下，<code>ns child</code> 就会拦截事件流，而且在拦截之后，也不用等到判断出滑动手势，<code>ns child</code>就会把滑动距离交给了<code>ns parent</code>。这个细节是比较合理的，会让用户体验更好一点（后文将不会对这个细节过多说明）</li>
+<li>为了理解上的方便，有一处细节的描述做了简化：其实在<code>NestedScrollView</code>、<code>RecyclerView</code>这类经典实现中，在判断出滑动手势之前，就可能拦截事件流。具体可以关注源码中的 <code>mIsBeingDragged</code> 字段，在 <code>ns child</code> 滚动时，只要用户一按下，<code>ns child</code> 就会拦截事件流，而且在拦截之后，也不用等到判断出滑动手势，<code>ns child</code>就会把滑动距离交给了<code>ns parent</code>。这个细节是比较合理的，会让用户体验更好一点（后文将不会对这个细节再做说明，直接用简化的描述）</li>
 <li>省略了关于直接传递fling的部分，因为这块的设计存在问题，而且最新版本这部分机制的作用已经非常小了，基本都没有用到，后面这点会再讲到</li>
 </ol>
 </blockquote>
@@ -2078,7 +2078,7 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 
 <h4 id="toc_13">3.3.2.使用 NestedScrolling 机制实现悬停布局</h4>
 
-<p>如果有对<code>NestedScrolling</code>机制还不是很了解的同学，可以参考我的另一篇篇透镜<a href="http://blog.rubitree.com/15467469615604.html">看穿 NestedScrolling 机制</a></p>
+<p>如果有对<code>NestedScrolling</code>机制还不是很了解的同学，可以参考我的另一篇篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 NestedScrolling 机制》</a></p>
 
 <p><code>NestedScrolling</code>机制帮我们做了太多事情，我们只需要实现一个简单的 <code>ns parent</code> 就好了<br/>
 代码简单得我都不想多说了，关键代码就是这些，完整代码可以看这里：</p>
