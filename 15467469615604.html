@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
   
-  【透镜系列】看穿 NestedScrolling 机制 - RubiTree's Blog
+  【透镜系列】看穿 > NestedScrolling 机制 - RubiTree's Blog
   
 
   </title>
@@ -84,7 +84,7 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">【透镜系列】看穿 NestedScrolling 机制</h1>
+			  	<h1 class="entry-title">【透镜系列】看穿 > NestedScrolling 机制</h1>
 				<p class="meta"><time datetime="2019-01-06T11:56:01+08:00" pubdate data-updated="true">2019/1/6</time></p>
 			 </header>
 		  	<div class="entry-content">
@@ -94,7 +94,8 @@ $(document).ready(function(event) {
 
 <hr/>
 
-<p>目录：</p>
+<p></br><br/>
+目录：</p>
 
 <ul>
 <li>
@@ -174,7 +175,9 @@ $(document).ready(function(event) {
 
 <hr/>
 
-<p>NestedScrolling 机制翻译过来叫嵌套滑动机制（下文将会混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
+<p></br></p>
+
+<p>NestedScrolling 机制翻译过来叫嵌套滑动机制（下文可能混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
 
 <h2 id="toc_0">1. 嵌套同向滑动</h2>
 
@@ -188,7 +191,7 @@ $(document).ready(function(event) {
 
 <h3 id="toc_2">1.2. 分析问题原因</h3>
 
-<p>（温馨提示：本文涉及事件分发的内容比较多，强烈建议对事件分发不是很了解的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 事件分发》</a>的理论部分）</p>
+<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 事件分发》</a>的理论部分）</p>
 
 <p>如果你熟悉 Android 的触摸事件分发机制，那么原因很好理解：两个<code>ScrollView</code>嵌套时，滑动距离终于达到滑动手势判定阈值（<code>mTouchSlop</code>）的这个<code>MOVE</code>事件，会先经过父 View 的<code>onInterceptTouchEvent()</code>方法，父 View 于是直接把事件拦截，子 View 的<code>onTouchEvent()</code>方法里虽然也会在判定滑动距离足够后调用<code>requestDisallowInterceptTouchEvent(true)</code>，但始终要晚一步。</p>
 
@@ -1071,7 +1074,7 @@ public void computeScroll() {
 	  
 	      
 		      <li class="post">
-		        <a href="15467469615604.html">【透镜系列】看穿 NestedScrolling 机制</a>
+		        <a href="15467469615604.html">【透镜系列】看穿 > NestedScrolling 机制</a>
 		      </li>
 	     
 	  

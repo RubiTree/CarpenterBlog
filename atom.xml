@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-10T01:52:41+08:00</updated>
+  <updated>2019-01-10T02:01:49+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[【透镜系列】看穿 NestedScrolling 机制]]></title>
+    <title type="html"><![CDATA[【透镜系列】看穿 > NestedScrolling 机制]]></title>
     <link href="http://blog.rubitree.com/15467469615604.html"/>
     <updated>2019-01-06T11:56:01+08:00</updated>
     <id>http://blog.rubitree.com/15467469615604.html</id>
@@ -25,7 +25,8 @@
 
 <hr/>
 
-<p>目录：</p>
+<p></br><br/>
+目录：</p>
 
 <ul>
 <li>
@@ -105,7 +106,9 @@
 
 <hr/>
 
-<p>NestedScrolling 机制翻译过来叫嵌套滑动机制（下文将会混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
+<p></br></p>
+
+<p>NestedScrolling 机制翻译过来叫嵌套滑动机制（下文可能混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
 
 <h2 id="toc_0">1. 嵌套同向滑动</h2>
 
@@ -119,7 +122,7 @@
 
 <h3 id="toc_2">1.2. 分析问题原因</h3>
 
-<p>（温馨提示：本文涉及事件分发的内容比较多，强烈建议对事件分发不是很了解的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 事件分发》</a>的理论部分）</p>
+<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15456255866253.html">《看穿 事件分发》</a>的理论部分）</p>
 
 <p>如果你熟悉 Android 的触摸事件分发机制，那么原因很好理解：两个<code>ScrollView</code>嵌套时，滑动距离终于达到滑动手势判定阈值（<code>mTouchSlop</code>）的这个<code>MOVE</code>事件，会先经过父 View 的<code>onInterceptTouchEvent()</code>方法，父 View 于是直接把事件拦截，子 View 的<code>onTouchEvent()</code>方法里虽然也会在判定滑动距离足够后调用<code>requestDisallowInterceptTouchEvent(true)</code>，但始终要晚一步。</p>
 
