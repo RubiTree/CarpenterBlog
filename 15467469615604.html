@@ -92,6 +92,8 @@ $(document).ready(function(event) {
 
 <span id="more"></span><!-- more -->
 
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+
 <hr/>
 
 <p></br><br/>
@@ -359,6 +361,8 @@ private fun isScrollToBottom(): Boolean {
 
 <p>这时就可以<del>（终于可以了）</del>来看看看系统提供的 NestedScrolling 机制是怎么完成嵌套滑动需求的，跟我们的实现相比，有什么区别，是更好还是更好？</p>
 
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+
 <h2 id="toc_7">2. NestedScrolling 机制</h2>
 
 <h3 id="toc_8">2.1. 原理</h3>
@@ -523,6 +527,8 @@ onNestedScroll(int unconsumed, int[] consumed)      // 覆写
 </blockquote>
 
 <p>另外，以上都说的是单一角色时的使用情况，有时候你会需要一个 View 扮演两个角色，就需要再多做一些事情，比如对于<code>ns parent</code>，你要时刻注意你也是 <code>ns child</code>，在来生意的时候也照顾一下自己的<code>ns parent</code>，这些可以去看 <code>NestedScrollView</code> 的实现，不在这展开了。</p>
+
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <h2 id="toc_10">3. 历史的消防车滚滚向前</h2>
 
@@ -1063,6 +1069,8 @@ private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] 
 <li>第二版和第三版都是在修 Bug  <del>，恩，还没修完。</del></li>
 </ol>
 
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+
 <h2 id="toc_19">4. 实践</h2>
 
 <p>第二节中其实已经讲过了实践，并且提供了实现 <code>ns child</code> 的模板。<br/>
@@ -1254,6 +1262,8 @@ private int getOffsetY() {
 <img src="media/15467469615604/2019-01-14_00-22-53.gif" alt="" style="width:300px;"/></p>
 
 <p><code>RecyclerView</code>等其他的<code>ns child</code>如果需要的话，也可以做类似的改动（不过这里的反射代码对性能有所影响，建议实现上做一些优化）</p>
+
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <h2 id="toc_24">5. 总结</h2>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-14T20:09:24+08:00</updated>
+  <updated>2019-01-14T20:10:49+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -22,6 +22,8 @@
 <p><img src="media/15467469615604/15468896445806.jpg" alt=""/></p>
 
 <span id="more"></span><!-- more -->
+
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <hr/>
 
@@ -290,6 +292,8 @@ private fun isScrollToBottom(): Boolean {
 
 <p>这时就可以<del>（终于可以了）</del>来看看看系统提供的 NestedScrolling 机制是怎么完成嵌套滑动需求的，跟我们的实现相比，有什么区别，是更好还是更好？</p>
 
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+
 <h2 id="toc_7">2. NestedScrolling 机制</h2>
 
 <h3 id="toc_8">2.1. 原理</h3>
@@ -454,6 +458,8 @@ onNestedScroll(int unconsumed, int[] consumed)      // 覆写
 </blockquote>
 
 <p>另外，以上都说的是单一角色时的使用情况，有时候你会需要一个 View 扮演两个角色，就需要再多做一些事情，比如对于<code>ns parent</code>，你要时刻注意你也是 <code>ns child</code>，在来生意的时候也照顾一下自己的<code>ns parent</code>，这些可以去看 <code>NestedScrollView</code> 的实现，不在这展开了。</p>
+
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <h2 id="toc_10">3. 历史的消防车滚滚向前</h2>
 
@@ -994,6 +1000,8 @@ private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] 
 <li>第二版和第三版都是在修 Bug  <del>，恩，还没修完。</del></li>
 </ol>
 
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+
 <h2 id="toc_19">4. 实践</h2>
 
 <p>第二节中其实已经讲过了实践，并且提供了实现 <code>ns child</code> 的模板。<br/>
@@ -1186,6 +1194,8 @@ private int getOffsetY() {
 
 <p><code>RecyclerView</code>等其他的<code>ns child</code>如果需要的话，也可以做类似的改动（不过这里的反射代码对性能有所影响，建议实现上做一些优化）</p>
 
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+
 <h2 id="toc_24">5. 总结</h2>
 
 <p>如果你没有跳过地看到这里，关于 NestedScrolling 机制，我相信现在无论是使用、还是原理、甚至<del>八卦</del>历史，你都了解得一清二楚了，否则我只能怀疑<del>你的</del>我的语文<del>老师</del>表达水平了。</p>
@@ -1231,7 +1241,7 @@ private int getOffsetY() {
 
 <span id="more"></span><!-- more -->
 
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <hr/>
 
@@ -2246,7 +2256,7 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 <p>第二个要求是最难的，如果有多个View都可以消费触摸事件，怎么判定哪个View更适合消费，并且把事件交给它。<br/>
 于是简单但有效地使用了一套先到先得的策略，让多个可消费触摸事件的View拥有近乎平等的竞争消费者的资格：它们都能接收到事件，并在自己判定应该消费事件的时候去发起竞争申请，申请成功后事件就全部由它消费。</p>
 
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <h2 id="toc_8">2. 测试轮子</h2>
 
@@ -2406,8 +2416,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
 <p>除了以上场景外，我也模拟了其他复杂的场景，能看到系统控件和麻雀控件打印的日志一模一样，这就说明了麻雀控件中的事件分发逻辑，确实与系统源码是一致的。<br/>
 而且从打印的日志中，能清晰地看到事件分发的轨迹，对理解事件分发过程也有很大的帮助。</p>
 
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
-
 <h2 id="toc_14">3. 实践</h2>
 
 <p>实际上进行事件分发的实践时，会包括两方面内容：</p>
@@ -2418,8 +2426,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
 </ol>
 
 <p>时间关系，这部分暂时直接去看另一篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 &gt; NestedScrolling 机制》</a>吧，它提供了过得去的实践场景。</p>
-
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
 
 <h2 id="toc_15">4. 附录</h2>
 
@@ -2435,8 +2441,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
     return consume;
 }
 </code></pre>
-
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
 
 ]]></content>
   </entry>

@@ -92,7 +92,7 @@ $(document).ready(function(event) {
 
 <span id="more"></span><!-- more -->
 
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <hr/>
 
@@ -1107,7 +1107,7 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 <p>第二个要求是最难的，如果有多个View都可以消费触摸事件，怎么判定哪个View更适合消费，并且把事件交给它。<br/>
 于是简单但有效地使用了一套先到先得的策略，让多个可消费触摸事件的View拥有近乎平等的竞争消费者的资格：它们都能接收到事件，并在自己判定应该消费事件的时候去发起竞争申请，申请成功后事件就全部由它消费。</p>
 
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <h2 id="toc_8">2. 测试轮子</h2>
 
@@ -1267,8 +1267,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
 <p>除了以上场景外，我也模拟了其他复杂的场景，能看到系统控件和麻雀控件打印的日志一模一样，这就说明了麻雀控件中的事件分发逻辑，确实与系统源码是一致的。<br/>
 而且从打印的日志中，能清晰地看到事件分发的轨迹，对理解事件分发过程也有很大的帮助。</p>
 
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
-
 <h2 id="toc_14">3. 实践</h2>
 
 <p>实际上进行事件分发的实践时，会包括两方面内容：</p>
@@ -1279,8 +1277,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
 </ol>
 
 <p>时间关系，这部分暂时直接去看另一篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 &gt; NestedScrolling 机制》</a>吧，它提供了过得去的实践场景。</p>
-
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
 
 <h2 id="toc_15">4. 附录</h2>
 
@@ -1296,8 +1292,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
     return consume;
 }
 </code></pre>
-
-<p><em>（转载请注明作者：RubiTree，地址：<a href="http://blog.rubitree.com">http://blog.rubitree.com</a> ）</em></p>
 
 			</div>
 
