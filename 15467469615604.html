@@ -85,7 +85,7 @@ $(document).ready(function(event) {
 	<article class="hentry" role="article">
 	<header>
 			  	<h1 class="entry-title">【透镜系列】看穿 > NestedScrolling 机制</h1>
-				<p class="meta"><time datetime="2019-01-06T11:56:01+08:00" pubdate data-updated="true">2019/1/6</time></p>
+				<p class="meta"><time datetime="2019-01-09T11:56:01+08:00" pubdate data-updated="true">2019/1/9</time></p>
 			 </header>
 		  	<div class="entry-content">
 			  	<p><img src="media/15467469615604/15468896445806.jpg" alt=""/></p>
@@ -180,7 +180,7 @@ $(document).ready(function(event) {
 <a href="#toc_22">4.3. 需求实现</a>
 </li>
 <li>
-<a href="#toc_23">4.4. 优化体验</a>
+<a href="#toc_23">4.4. 优化误操作问题</a>
 </li>
 </ul>
 </li>
@@ -208,7 +208,7 @@ $(document).ready(function(event) {
 
 <h3 id="toc_2">1.2. 分析问题原因</h3>
 
-<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 &gt; 触摸事件分发》</a>的理论部分）</p>
+<p>（温馨提示：本文涉及事件分发的内容比较多，建议对事件分发不太熟悉的同学先阅读另一篇透镜<a href="http://blog.rubitree.com/15467469615604.html">《看穿 &gt; 触摸事件分发》</a>）</p>
 
 <p>如果你熟悉 Android 的触摸事件分发机制，那么原因很好理解：两个<code>ScrollView</code>嵌套时，滑动距离终于达到滑动手势判定阈值（<code>mTouchSlop</code>）的这个<code>MOVE</code>事件，会先经过父 View 的<code>onInterceptTouchEvent()</code>方法，父 View 于是直接把事件拦截，子 View 的<code>onTouchEvent()</code>方法里虽然也会在判定滑动距离足够后调用<code>requestDisallowInterceptTouchEvent(true)</code>，但始终要晚一步。</p>
 
@@ -808,7 +808,7 @@ public void computeScroll() {
 <li>不过这个问题在体验上不算明显，不过也不难发现，只是用户可能不知道这是个 Bug 还是 Feature（233</li>
 </ol>
 
-<p></b></p>
+<p></br></p>
 
 <p>然后是第二个问题：<span id="bug2_2"><strong>「空气马达」</strong></span><em>（<a href="#history_summarize">回到小结</a>）</em><br/>
 <img src="media/15467469615604/2019-01-09_14-05-22%20-1-.gif" alt="" style="width:200px;"/></p>
@@ -820,7 +820,7 @@ public void computeScroll() {
 
 <ol>
 <li>预期应该是：外部 View 往上滚动</li>
-<li>但实际上你会发现：你滑不动它，或是滑上去一点，马上又下来了，像是有一台无形的马达在跟你的手指较劲（反方向也是一样），如下图</li>
+<li>但实际上你会发现：你滑不动它，或是滑上去一点，马上又下来了，像是有一台无形的马达在跟你的手指较劲（反方向也是一样），如上图</li>
 </ol></li>
 <li>为什么会这样呢？
 
@@ -1058,8 +1058,8 @@ private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] 
 <p>所以<a href="#questions">前面的问题</a>大家应该都有了<span id="answers"><strong>答案</strong></span>：</p>
 
 <ol>
-<li>使用接口和 Helper 是为了兼容低版本和容易升级，并不是 NestedScrolling 机制用起来最方便的样子。所以为了便于理解，我就直接说调用 View 和 ViewGroup 的方法，但真正用的时候你最好还是在 Helper 的帮助下实现它最新的接口，然后再调用你实现的这些方法，因为 View 和 ViewGroup 的方法对 API 的版本要求高，自己的版本又很低。放心很简单的，因为方法名跟 View 和 ViewGroup 中的都一样，Helper 的使用也很直接，就不举例子了。</li>
-<li>常用的方法也就是这9个了，剩下的8个不用急着去了解，其中 fling 相关方法有点凉凉的味道，然后第二版机制和第三版机制并没有增加新的方法。</li>
+<li>使用接口和 Helper 是为了兼容低版本和容易升级，并不是 NestedScrolling 机制用起来最方便的样子。所以为了便于理解，我就直接说调用 View 和 ViewGroup 的方法，但真正用的时候你最好还是在 Helper 的帮助下实现它最新的接口，然后再调用你实现的这些方法，因为 View 和 ViewGroup 的方法对 API 的版本要求高，自己的版本又很低。这点使用上的变化比较简单，因为方法名跟 View 和 ViewGroup 中的都一样，Helper 的使用也很直接，就不举例子了。</li>
+<li>常用的方法也就是这9个了，剩下的8个不用急着去了解，其中 fling 相关方法有点凉凉的味道。然后第二版机制和第三版机制并没有增加新的方法，机制的总体设计没有大的变化。</li>
 <li>第二版和第三版都是在修 Bug  <del>，恩，还没修完。</del></li>
 </ol>
 
@@ -1077,7 +1077,7 @@ private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] 
 <p>用文字描述是这样：</p>
 
 <ol>
-<li>页面内容分为 Header、悬停区和内容区，其中内容区可以左右滑动，有多个 Tab 页，而且每个 Tab 页是允许上下滑动的</li>
+<li>页面内容分为 Header、悬停区（一般会是 TabLayout）和内容区，其中内容区可以左右滑动，有多个 Tab 页，而且每个 Tab 页是允许上下滑动的</li>
 <li>用户向上滑动时，先折叠 Header，当 Header 全部折叠收起后，悬停区悬停不动，内容区向上滑动</li>
 <li>用户向下滑动时，先把内容区向下滑动，然后展开 Header，悬停区顺势下移</li>
 <li>其中内容区的滑动和 Header 的收起展开在用户连续滑动时应该表现为连续的，甚至在用户滑动中快速抬起时，滑动的惯性也需要在两个动作间保持连续</li>
@@ -1102,13 +1102,13 @@ private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] 
 <li>最奇葩是饿了么的店铺首页和知乎的 Live 详情页，都是创收的页面啊，居然能自带鬼畜，好吧，也是心大</li>
 </ol>
 
-<p>其他还有一些千奇百怪的 Bug 就不举例了<br/>
-所以，就让我们来看看，这个功能实现起来是不是真有那么难</p>
+<p>其他还有一些千奇百怪的 Bug 就不举例了。<br/>
+所以，就让我们来看看，这个功能实现起来是不是真有那么难。</p>
 
 <h3 id="toc_21">4.2. 需求分析</h3>
 
-<p>如果内容区只有一个 Tab 页，一种简单直接的实现思路是：页面整个就是一个滑动控件，悬停区域会在滑动过程中不断调整自己的位置，实现悬停的效果<br/>
-它的实现非常简单，效果也完全符合要求，不举例了，可以自己试试</p>
+<p>如果内容区只有一个 Tab 页，一种简单直接的实现思路是：页面整个就是一个滑动控件，悬停区域会在滑动过程中不断调整自己的位置，实现悬停的效果。<br/>
+它的实现非常简单，效果也完全符合要求，不举例了，可以自己试试。</p>
 
 <p>但这里的需求是有多个 Tab 页，它用一整个滑动控件的思路是无法实现的，需要用多个滑动控件配合实现</p>
 
@@ -1143,9 +1143,9 @@ private void onNestedScrollInternal(int dyUnconsumed, int type, @Nullable int[] 
 
 <h3 id="toc_22">4.3. 需求实现</h3>
 
-<p>用<code>NestedScrolling</code>机制一想，你会发现实现起来会非常简单，上面的分析过程在机制中直接就有对应的接口，我们只要实现一个符合要求的 <code>ns parent</code> 就好了，<code>NestedScrolling</code>机制会自动管理 <code>ns parent</code> 与 <code>ns child</code> 的绑定和 scroll 的传递，即使 <code>ns child</code> 与 <code>ns parent</code> 相隔好几层 View。</p>
+<p>用<code>NestedScrolling</code>机制一想，你会发现实现起来非常简单，上面的分析过程在机制中直接就有对应的接口，我们只要实现一个符合要求的 <code>ns parent</code> 就好了，<code>NestedScrolling</code>机制会自动管理 <code>ns parent</code> 与 <code>ns child</code> 的绑定和 scroll 的传递，即使 <code>ns child</code> 与 <code>ns parent</code> 相隔好几层 View。</p>
 
-<p><code>SuspendedLayout</code> 这个 <code>ns parent</code> 中的关键代码如下，它剩下的代码，以及布局和页面代码就不写出来了，可以在<a href="https://github.com/RubiTree/NestedScrollingHistory/blob/master/app/src/main/java/com/rubitree/demo/suspendedlayout/SuspendedLayoutActivity.kt">这里</a>查看（简单把第一个 child view 作为 Header，第二个 child view 也可以换成 <code>TabLayout</code>）。</p>
+<p>我把要实现的 <code>ns parent</code> 叫做 <code>SuspendedLayout</code> ，其中的关键代码如下，它剩下的代码以及布局和页面代码就不写出来了，可以在<a href="https://github.com/RubiTree/NestedScrollingHistory/blob/master/app/src/main/java/com/rubitree/demo/suspendedlayout/SuspendedLayoutActivity.kt">这里</a>查看（简单把第一个 child view 作为 Header，第二个 child view 会自然悬停）。</p>
 
 <pre><code class="language-kotlin">override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int, consumed: IntArray) {
     if (dyUnconsumed &lt; 0) scrollDown(dyUnconsumed, consumed)
@@ -1179,12 +1179,13 @@ override fun scrollTo(x: Int, y: Int) {
 }
 </code></pre>
 
-<p>效果非常完美，与哔哩哔哩几乎一样了：<br/>
+<p>这么快就实现了，效果非常完美，与哔哩哔哩几乎一样：<br/>
 <img src="media/15467469615604/2019-01-14_00-25-34.gif" alt="" style="width:300px;"/></p>
 
-<h3 id="toc_23">4.4. 优化体验</h3>
+<h3 id="toc_23">4.4. 优化误操作问题</h3>
 
-<p>但效果一样好也一样坏，哔哩哔哩的那个体验问题这里也有，先看看为什么会有这样的问题？</p>
+<p>但效果一样好也一样坏，哔哩哔哩的那个容易误操作的问题这里也有。<br/>
+先看看为什么会出现这样的问题？</p>
 
 <ol>
 <li>从问题表现上很容易找到线索，肯定是在上滑过程中被 <code>ViewPager</code> 拦截了事件，也就是 <code>ns child</code> 没有及时「申请外部不拦截事件流」，于是到 <code>NestScrollView</code> 和 <code>RecyclerView</code> 中查看，问题其实就出在前面描述的<a href="#bug_n_1"><code>ns child</code> 在 <code>onTouchEvent()</code> 中的逻辑</a>上<span id="title_4_4"> </span></li>
@@ -1245,14 +1246,14 @@ private int getOffsetY() {
 <p>这里有个细节值得一提：在计算<code>deltaY</code>时不只是用<code>mLastMotionY - y</code>，还减去了<code>(getOffsetY() - downScreenOffset)</code>，这里的<code>offsetInWindow</code>其实也出现在 NestedScrolling 机制里的<code>dispatchNestedScroll()</code>等接口中</p>
 
 <ol>
-<li>它的作用非常关键，因为当 <code>ns child</code> 驱动 <code>ns parent</code> 滑动时，<code>ns child</code> 其实也在移动，此时<code>ns child</code>中获取到的手指触发的<code>motion event</code>中 <code>x</code>和<code>y</code>值是相对<code>ns child</code>的，所以此时如果直接使用<code>y</code>值，你会发现<code>y</code>值几乎没有变化，这样算到的<code>deltaY</code>也会没有变化，所以需要再获取<code>ns child</code>相对窗口的偏移，把它算入<code>deltaY</code>，才能得到你真正需要的<code>deltaY</code></li>
+<li><code>offsetInWindow</code>的作用非常关键，因为当 <code>ns child</code> 驱动 <code>ns parent</code> 滑动时，<code>ns child</code> 其实也在移动，此时<code>ns child</code>中获取到的手指触发的<code>motion event</code>中 <code>x</code>和<code>y</code>值是相对<code>ns child</code>的，所以此时如果直接使用<code>y</code>值，你会发现<code>y</code>值几乎没有变化，这样算到的<code>deltaY</code>也会没有变化，所以需要再获取<code>ns child</code>相对窗口的偏移，把它算入<code>deltaY</code>，才能得到你真正需要的<code>deltaY</code></li>
 <li><code>ViewPager</code>为什么会在竖直滑动那么远之后还能对横滑进行拦截，也是这个原因，它获取到的<code>deltaY</code>其实很小</li>
 </ol>
 
 <p>改完之后的效果如下，能看到解决了问题：<br/>
 <img src="media/15467469615604/2019-01-14_00-22-53.gif" alt="" style="width:300px;"/></p>
 
-<p><code>RecyclerView</code>等其他的<code>ns child</code>如果需要的话，也可以做类似的改动（不过这里的反射代码对性能有所影响，慎用）</p>
+<p><code>RecyclerView</code>等其他的<code>ns child</code>如果需要的话，也可以做类似的改动（不过这里的反射代码对性能有所影响，建议实现上做一些优化）</p>
 
 <h2 id="toc_24">5. 总结</h2>
 
@@ -1263,7 +1264,7 @@ private int getOffsetY() {
 <p>最后关于使用多说两句：</p>
 
 <ol>
-<li>如果你需要目前最好的嵌套滑动体验，不管是直接用系统 View 还是自定义 View ，直接用最新的AndroidX 吧，并且自定义的时候注意使用3系列</li>
+<li>如果你需要目前最好的嵌套滑动体验，不管是直接用系统 View 还是自定义 View ，直接用最新的 AndroidX 吧，并且自定义的时候注意使用3系列</li>
 <li>如果你的项目暂时不方便切换 AndroidX，那么就升级到最新的 v4 吧，注意自定义的时候用2系列</li>
 <li>如果你的项目追求极致体验，而且正好用到了嵌套的<code>NestedScrollView</code>，认为第三版的 Bug 也会影响到你宝贵而敏感的用户，那不如试试 implementation <a href="https://github.com/RubiTree/NestedScrollingHistory">我的项目</a> :D</li>
 </ol>
@@ -1329,7 +1330,7 @@ private int getOffsetY() {
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="LensSeries.html"><strong>LensSeries&nbsp;(3)</strong></a>
+	        <a href="LensSeries.html"><strong>LensSeries&nbsp;(2)</strong></a>
 	        
 	        
 	        
@@ -1350,12 +1351,6 @@ private int getOffsetY() {
 	      
 		      <li class="post">
 		        <a href="15456255866253.html">【透镜系列】看穿 > 触摸事件分发</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15444051477462.html">【透镜系列】看穿 > Canvas变换</a>
 		      </li>
 	     
 	   
