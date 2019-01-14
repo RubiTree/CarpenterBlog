@@ -1007,7 +1007,7 @@ public void computeScroll() {
 <p>实际体验跟分析结果一样这样，当通过滑动内部 View 触发外部 View 滑动时，你无法通过触摸外部 View 把它停下来，外部 View 比较长的时候容易复现，如下图（换了一个方向）<br/>
 <img src="media/15467469615604/2019-01-09_14-17-17%20-1-.gif" alt="" style="width:200px;"/></p>
 
-<p>不过这个问题只有可以响应触摸的<code>ns parent</code>需要考虑，可以响应触摸的<code>ns parent</code>主要就是<code>NestedScrollView</code>了，所以这个问题主要还是<code>NestedScrollView</code>的问题。而且它也跟机制无关，只是<code>NestedScrollView</code>的用法不对，所以前面说的会有第四版 NestedScrolling 机制可能性也不大，大概只会给<code>NestedScrollView</code>上个普通的更新吧（@@@去issue里给 Google 提了个bug）</p>
+<p>不过这个问题只有可以响应触摸的<code>ns parent</code>需要考虑，可以响应触摸的<code>ns parent</code>主要就是<code>NestedScrollView</code>了，所以这个问题主要还是<code>NestedScrollView</code>的问题。而且它也跟机制无关，只是<code>NestedScrollView</code>的用法不对，所以前面说的会有第四版 NestedScrolling 机制可能性也不大，大概只会给<code>NestedScrollView</code>上个普通的更新吧（顺手给 Google 提了个 <a href="https://issuetracker.google.com/issues/122804075">issue</a>）</p>
 
 <p>而这个问题自己改也非常好改，只需要在<code>DOWN</code>事件后能给<code>ns child</code>反馈自己被摁住了就行，可以用反射，或是直接把<code>NestedScrollView</code>挪出来改，关键代码如下</p>
 
