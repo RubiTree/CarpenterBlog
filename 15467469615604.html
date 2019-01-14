@@ -194,7 +194,7 @@ $(document).ready(function(event) {
 
 <p></br></p>
 
-<p>NestedScrolling 机制翻译过来叫嵌套滑动机制（下文可能混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
+<p>NestedScrolling 机制翻译过来叫嵌套滑动机制（本文将混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
 
 <h2 id="toc_0">1. 嵌套同向滑动</h2>
 
@@ -262,7 +262,7 @@ $(document).ready(function(event) {
 
 <h3 id="toc_4">1.4. 第一次优化</h3>
 
-<p>但我们希望体验能更好一点，内部应该在自己无法滑动的时候，直接在<code>onTouchEvent()</code>返回<code>false</code>，不触发「申请外部不拦截的判定条件」，就能让内外都有机会滑动。<br/>
+<p>但我们希望体验能更好一点，从上图能看到，内部即使在自己无法滑动的时候，也会对事件进行拦截，无法通过滑动内部来让外部滑动。其实内部应该在自己无法滑动的时候，直接在<code>onTouchEvent()</code>返回<code>false</code>，不触发「申请外部不拦截的判定条件」，就能让内外都有机会滑动。<br/>
 这个要求非常通用而且合理，在<code>SimpleNestedScrollView</code>基础上进行简单修改，<strong>加上</strong>以下代码：</p>
 
 <pre><code class="language-kotlin">private var isNeedRequestDisallowIntercept: Boolean? = null
@@ -352,7 +352,7 @@ private fun isScrollToBottom(): Boolean {
 <p>到这里我们对嵌套滑动交互的理解基本已经非常通透了，知道了让我们自己实现也就那么回事，主要需要解决下面几个问题：</p>
 
 <ol>
-<li>在内部 View 可以滑动的时候，阻止外部 View 拦截滑动事件，先滑动内部V iew</li>
+<li>在内部 View 可以滑动的时候，阻止外部 View 拦截滑动事件，先滑动内部 View</li>
 <li>在用户一次滑动操作中，当内部 View 滑动到终点时，切换滑动对象为外部 View，让用户能够连续滑动</li>
 <li>在用户快速抬起触发的惯性滑动中，当内部 View 滑动到终点时，切换滑动对象为外部 View，让惯性能够连续</li>
 </ol>
@@ -363,7 +363,7 @@ private fun isScrollToBottom(): Boolean {
 
 <h3 id="toc_8">2.1. 原理</h3>
 
-<p>与我们不同，我们只考虑了给<code>ScrollView</code>增加支持嵌套滑动的特性，但系统开发者需要考虑给所有有滑动交互的 View 增加这个特性，所以一个直接的思路是在 View 里加入这个机制</p>
+<p>与我们不同，我们只考虑了给<code>ScrollView</code>增加支持嵌套滑动的特性，但系统开发者需要考虑给所有有滑动交互的 View 增加这个特性，所以一个直接的思路是在 View 里加入这个机制。</p>
 
 <p>那么要怎么加，加哪些东西呢？</p>
 
@@ -396,7 +396,7 @@ private fun isScrollToBottom(): Boolean {
 <li>从逻辑上区分嵌套滑动中的两个角色：<code>ns child</code>和<code>ns parent</code>，对应了上面的内部 View 和外部 View
 
 <ol>
-<li><em>注：1）这里我用「ns」表示<code>nested scroll</code>的缩写；2）什么叫逻辑上？因为它允许你一个View同时扮演两个角色</em></li>
+<li><em>注：1）这里我用「ns」表示<code>nested scroll</code>的缩写；2）为什么叫逻辑上？因为实际上它允许你一个 View 同时扮演两个角色</em></li>
 </ol></li>
 <li><code>ns child</code>会在收到<code>DOWN</code>事件时，找到自己祖上中最近的能与自己匹配的<code>ns parent</code>，与它进行绑定并关闭它的事件拦截机制</li>
 <li>然后<code>ns child</code>会在接下来的<code>MOVE</code>事件中判定出用户触发了滑动手势，并把事件流拦截下来给自己消费</li>
@@ -517,7 +517,7 @@ onNestedScroll(int unconsumed, int[] consumed)      // 覆写
 
 <ol>
 <li>虽然模板在IDE里不会报错，但这不是可以运行的代码，这是剔除 <code>NestedScrollView</code> 中关于 <code>ns parent</code> 的部分，得到的可以认为是官方推荐的 <code>ns child</code> 实现</li>
-<li>同时，为了让主线逻辑更加清晰，删去了多点触控相关的逻辑，实际开发如果需要，可以直接参考 <code>NestedScrollView</code> 中的写法，不会麻烦太多</li>
+<li>同时，为了让主线逻辑更加清晰，删去了多点触控相关的逻辑，实际开发如果需要，可以直接参考 <code>NestedScrollView</code> 中的写法，不会麻烦太多<em>（有空会写多点触控的透镜系列XD）</em></li>
 <li>其中的关键部分是在触摸和滚动时怎么调用 <code>NestedScrollingChild</code> 接口的方法，也就是 <code>onInterceptTouchEvent()</code> 、 <code>onTouchEvent()</code> 、<code>computeScroll()</code> 中大约 200 行的代码</li>
 </ol>
 </blockquote>
@@ -529,8 +529,8 @@ onNestedScroll(int unconsumed, int[] consumed)      // 覆写
 <p><span id="questions">但是有人就<strong>问</strong>了：</span><em>（<a href="#answers">回到答案</a>）</em></p>
 
 <ol>
-<li>我怎么看到别人讲，你必须实现<code>NestedScrollingParent</code>和<code>NestedScrollingChild</code>这两个接口，然后利用上<code>NestedScrollingParent Helper</code>和<code>NestedScrollingChild Helper</code>这两个帮助类，才能实现一个支持嵌套滑动的自定义View啊，而且大家都称赞这是一种很棒的设计呢，怎么到你这就变成了直接加在View和 ViewGroup 里的方法了，这么普通的 DISCO 嘛？而且题图里也看到有这几个接口的啊，你难道是标题党吗？<del>（赞一个居然还记得题图）</del></li>
-<li>为什么不用实现接口也能实现嵌套滑动，又为什么几乎所有实现嵌套滑动的View又都实现了这两个接口呢？</li>
+<li>我怎么看到别人讲，你必须实现<code>NestedScrollingParent</code>和<code>NestedScrollingChild</code>这两个接口，然后利用上<code>NestedScrollingParent Helper</code>和<code>NestedScrollingChild Helper</code>这两个帮助类，才能实现一个支持嵌套滑动的自定义 View 啊，而且大家都称赞这是一种很棒的设计呢，怎么到你这就变成了直接加在View和 ViewGroup 里的方法了，这么普通的 DISCO 嘛？而且题图里也看到有这几个接口的啊，你难道是标题党吗？<del>（赞一个居然还记得题图）</del></li>
+<li>为什么不用实现接口也能实现嵌套滑动，又为什么几乎所有实现嵌套滑动的 View 又都实现了这两个接口呢？</li>
 <li>为什么明明嵌套滑动机制在<code>NestedScrollingParent</code>和<code>NestedScrollingChild</code>这两个接口里放了那么多方法，你却只讲9个呢？</li>
 <li>为什么接口里的 fling 系列方法你不讲？</li>
 <li>为什么有<code>NestedScrollingChild</code>，有<code>NestedScrollingChild2</code>，工作不饱和的同学会发现最近 Google 还增加了<code>NestedScrollingChild3</code>，这都是在干哈？改了些什么啊？</li>
@@ -544,9 +544,9 @@ onNestedScroll(int unconsumed, int[] consumed)      // 覆写
 
 <p>在 <code>Android 5.0 /  API  21 (2014.9)</code> 时， Google 第一次加入了 NestedScrolling 机制。</p>
 
-<p>虽然在<a href="https://developer.android.com/about/versions/android-5.0">版本更新</a>里完全没有提到，但是在<a href="http://androidxref.com/5.0.0_r2/xref/frameworks/base/core/java/android/View/View.java"><code>View</code></a>和<code>ViewGroup</code>的源码里你已经能看到其中的嵌套滑动相关方法。<br/>
-而且此时使用了这些方法实现了嵌套滑动效果的View其实已经有不少了，除了我们讲过的<code>ScrollView</code>，还有<code>AbsListView</code>、<code>ActionBarOverlayLayout</code>等，而这些也基本是当时所有跟滑动有关的View了。<br/>
-所以，如上文嵌套<code>ScrollView</code>的例子所示，在<code>Android 5.0</code>时大家其实就能通过<code>setNestedScrollingEnabled(true)</code>开关启用View的嵌套滑动效果。</p>
+<p>虽然在<a href="https://developer.android.com/about/versions/android-5.0">版本更新</a>里完全没有提到，但是在<a href="http://androidxref.com/5.0.0_r2/xref/frameworks/base/core/java/android/View/View.java"><code>View</code></a>和 <code>ViewGroup</code> 的源码里你已经能看到其中的嵌套滑动相关方法。<br/>
+而且此时使用了这些方法实现了嵌套滑动效果的 View 其实已经有不少了，除了我们讲过的<code>ScrollView</code>，还有<code>AbsListView</code>、<code>ActionBarOverlayLayout</code>等，而这些也基本是当时所有跟滑动有关的 View 了。<br/>
+所以，如上文嵌套<code>ScrollView</code>的例子所示，在<code>Android 5.0</code>时大家其实就能通过<code>setNestedScrollingEnabled(true)</code>开关启用 View 的嵌套滑动效果。</p>
 
 <p>这是 NestedScrolling 机制的第一版实现。</p>
 
@@ -649,13 +649,13 @@ public void computeScroll() {
 
 <ol>
 <li>首先看 API ，同滑动一样，设计者给惯性（速度）也设计了一套协同消费的机制，但是这套机制与滑动不太一样，或者说完全不同</li>
-<li>在用户滑动<code>ns child</code>并快速抬起手指产生惯性的时候，<code>ns child</code>会先问<code>ns parent</code>是否消费此速度
+<li>在用户滑动<code>ns child</code>并快速抬起手指产生惯性的时候，看<code>flingWithNestedDispatch()</code>方法，<code>ns child</code>会先问<code>ns parent</code>是否消费此速度
 
 <ol>
 <li>如果消费，就把速度全部交出，自己不再消费</li>
 <li>如果<code>ns parent</code>不消费，那么将再次把速度交给<code>ns parent</code>，并且告诉它自己是否有消费速度的条件<em>（根据系统类库一贯的写法，如果<code>ns child</code>消费这个速度，<code>ns parent</code>都不会对这个速度做处理）</em>，同时自己在有消费速度的条件时，对速度进行消费</li>
 </ol></li>
-<li>消费速度是通过使用<code>mScroller</code>进行惯性滑动，但是在<code>computeScroll()</code>中并没有把滑动分发给 <code>ns parent</code> </li>
+<li>自己消费速度的方式是使用<code>mScroller</code>进行惯性滑动，但是在<code>computeScroll()</code>中并没有把滑动分发给 <code>ns parent</code> </li>
 <li>最后只要抬起手指，就会调用<code>stopNestedScroll()</code>解除与<code>ns parent</code>的绑定，宣告这次协同合作到此结束</li>
 </ol>
 
@@ -682,7 +682,7 @@ public void computeScroll() {
 <p>首先看接口是怎么改的：</p>
 
 <ol>
-<li><code>ns child</code>在<code>computeScroll</code>中分发滑动给<code>ns parent</code>没有问题（这是关键），但是我要区分开是用户手指移动触发的滑动还是由惯性触发的滑动</li>
+<li><code>ns child</code>在<code>computeScroll</code>中分发滑动给<code>ns parent</code>没有问题（这是关键），但是我要区分开是用户手指移动触发的滑动还是由惯性触发的滑动（这是锦上添花）</li>
 <li>于是第二版中给所有<code>NestedScrollingChild</code>中滑动相关的<em>（确切地说是除了「fling相关、滑动开关」外的）</em> 5个方法、所有<code>NestedScrollingParent</code>中滑动相关的<em>（确切地说是除了「fling相关、获取滑动轴」外的）</em> 5个方法，都增加了一个参数<code>type</code>，<code>type</code>有两个取值代表上述的两种滑动类型：<code>TYPE_TOUCH</code>、<code>TYPE_NON_TOUCH</code></li>
 <li>所以第二版的两个接口没有增删任何方法，只是给10个方法加了个<code>type</code>参数，并且对旧的接口做了个兼容，让它们的<code>type</code>是<code>TYPE_TOUCH</code></li>
 </ol>
@@ -690,7 +690,7 @@ public void computeScroll() {
 <p>改完了接口当然还要改代码了，Helper 类首先要改</p>
 
 <ol>
-<li><a href="http://androidxref.com/6.0.0_r1/xref/frameworks/support/v4/java/android/support/v4/View/NestedScrollingChild%20Helper%20.java">第一版的 <code>NestedScrollingChildHelper</code></a> 里边本来持有了一个<code>ns parent</code> 域 <code>mNestedScrollingParentTouch</code>，作为绑定关系，<a href="http://androidxref.com/8.0.0_r4/xref/frameworks/support/core-ui/java/android/support/v4/View/NestedScrollingChild%20Helper%20.java">第二版</a> 又再加了一个<code>ns parent</code> 域 <code>mNestedScrollingParentNonTouch</code>，为什么是两个而不是公用一个，大概是避免对两类滑动的生命周期有过于严格的要求，比如在 <code>NestedScrollView</code> 的实现里，就是先开启<code>TYPE_NON_TOUCH</code>类型的滑动，然后关闭了 <code>TYPE_TOUCH</code> 类型的滑动</li>
+<li><a href="http://androidxref.com/6.0.0_r1/xref/frameworks/support/v4/java/android/support/v4/View/NestedScrollingChild%20Helper%20.java">第一版的 <code>NestedScrollingChildHelper</code></a> 里边本来持有了一个<code>ns parent</code> 域 <code>mNestedScrollingParentTouch</code>，作为绑定关系，<a href="http://androidxref.com/8.0.0_r4/xref/frameworks/support/core-ui/java/android/support/v4/View/NestedScrollingChild%20Helper%20.java">第二版</a> 又再加了一个<code>ns parent</code> 域 <code>mNestedScrollingParentNonTouch</code>，为什么是两个而不是公用一个，大概是避免对两类滑动的生命周期有过于严格的要求，比如在 <code>NestedScrollView</code> 的实现里，就是先开启<code>TYPE_NON_TOUCH</code>类型的滑动，然后关闭了 <code>TYPE_TOUCH</code> 类型的滑动，如果公用一个 <code>ns parent</code> 域，就做不到这样了</li>
 <li><code>NestedScrollingChildHelper</code> 里边主要就做了这一点额外的改动，其他的改动都是增加参数后的常规变换，<code>NestedScrollingParentHelper</code> 里就更没有特别的变化了</li>
 </ol>
 
@@ -787,7 +787,8 @@ public void computeScroll() {
 
 <p>看上去第二个版本改得很漂亮对吧，但这次改动其实又引入了两个问题，至少有一个算是Bug，另一个可以说只是交互不够好，不过这个交互不够好的问题引入的原因却非常令人迷惑。</p>
 
-<p>先说第一个问题：<span id="bug2_1"><strong>「二倍速」</strong></span><em>（<a href="#history_summarize">回到小结</a>）</em></p>
+<p>先说第一个问题：<span id="bug2_1"><strong>「二倍速」</strong></span><em>（<a href="#history_summarize">回到小结</a>）</em><br/>
+<img src="media/15467469615604/2019-01-09_14-01-43%20-1-.gif" alt="" style="width:200px;"/></p>
 
 <ol>
 <li>我只知道它正好出现在了<code>NestedScrollView</code>中，<code>RecyclerView</code>等类没有这个问题，我极度怀疑它的引入是因为手滑</li>
@@ -807,9 +808,10 @@ public void computeScroll() {
 <li>不过这个问题在体验上不算明显，不过也不难发现，只是用户可能不知道这是个 Bug 还是 Feature（233</li>
 </ol>
 
-<p><img src="media/15467469615604/2019-01-09_14-01-43%20-1-.gif" alt="" style="width:200px;"/></p>
+<p></b></p>
 
-<p>然后是第二个问题：<span id="bug2_2"><strong>「空气马达」</strong></span><em>（<a href="#history_summarize">回到小结</a>）</em></p>
+<p>然后是第二个问题：<span id="bug2_2"><strong>「空气马达」</strong></span><em>（<a href="#history_summarize">回到小结</a>）</em><br/>
+<img src="media/15467469615604/2019-01-09_14-05-22%20-1-.gif" alt="" style="width:200px;"/></p>
 
 <ol>
 <li>这个问题肯定算 Bug 了，所有的嵌套滑动控件都存在，而且体验非常明显</li>
@@ -823,7 +825,7 @@ public void computeScroll() {
 <li>为什么会这样呢？
 
 <ol>
-<li>其实我开始也不得要领，只好打日志去看到底谁是那个马达，调试了好一会（当时还闹了个笑话有空再写）才发现原来马达就是内部 View</li>
+<li>其实我开始也不得要领，只好打日志去看到底谁是那个马达，调试了好一会<em>（当时还闹了个笑话有空再写）</em>才发现原来马达就是内部 View</li>
 <li>原因解释起来也是非常简单的：
 
 <ol>
@@ -857,8 +859,6 @@ public void computeScroll() {
 </ol>
 
 <!--，有需要的可以看这里的代码@@@-->
-
-<p><img src="media/15467469615604/2019-01-09_14-05-22%20-1-.gif" alt="" style="width:200px;"/></p>
 
 <h3 id="toc_16">3.4. 第三个版本，2018年11月</h3>
 
