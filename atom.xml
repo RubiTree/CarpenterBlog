@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-15T12:03:33+08:00</updated>
+  <updated>2019-01-15T17:49:16+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[【透镜系列】看穿 > NestedScrolling 机制]]></title>
+    <title type="html"><![CDATA[【透镜系列】看穿 > NestedScrolling 机制 >]]></title>
     <link href="http://blog.rubitree.com/15467469615604.html"/>
     <updated>2019-01-06T11:56:01+08:00</updated>
     <id>http://blog.rubitree.com/15467469615604.html</id>
@@ -1236,7 +1236,7 @@ private int getOffsetY() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[【透镜系列】看穿 > 触摸事件分发]]></title>
+    <title type="html"><![CDATA[【透镜系列】看穿 > 触摸事件分发 >]]></title>
     <link href="http://blog.rubitree.com/15456255866253.html"/>
     <updated>2018-12-24T12:26:26+08:00</updated>
     <id>http://blog.rubitree.com/15456255866253.html</id>
