@@ -539,7 +539,7 @@ onNestedScroll(int unconsumed, int[] consumed)      // 覆写
 <p><span id="questions">但是有人就<strong>问</strong>了：</span><em>（<a href="#answers">回到答案</a>）</em></p>
 
 <ol>
-<li>我怎么看到别人讲，你必须实现<code>NestedScrollingParent</code>和<code>NestedScrollingChild</code>这两个接口，然后利用上<code>NestedScrollingParent Helper</code>和<code>NestedScrollingChild Helper</code>这两个帮助类，才能实现一个支持嵌套滑动的自定义 View 啊，而且大家都称赞这是一种很棒的设计呢，怎么到你这就变成了直接加在View和 ViewGroup 里的方法了，这么普通的 DISCO 嘛？而且题图里也看到有这几个接口的啊，你难道是标题党吗？<del>（赞一个居然还记得题图）</del></li>
+<li>我怎么看到别人讲，你必须实现<code>NestedScrollingParent</code>和<code>NestedScrollingChild</code>这两个接口，然后利用上<code>NestedScrollingParentHelper</code>和<code>NestedScrollingChildHelper</code>这两个帮助类，才能实现一个支持嵌套滑动的自定义 View 啊，而且大家都称赞这是一种很棒的设计呢，怎么到你这就变成了直接加在View和 ViewGroup 里的方法了，这么普通的 DISCO 嘛？而且题图里也看到有这几个接口的啊，你难道是标题党吗？<del>（赞一个居然还记得题图）</del></li>
 <li>为什么不用实现接口也能实现嵌套滑动，又为什么几乎所有实现嵌套滑动的 View 又都实现了这两个接口呢？</li>
 <li>为什么明明嵌套滑动机制在<code>NestedScrollingParent</code>和<code>NestedScrollingChild</code>这两个接口里放了那么多方法，你却只讲9个呢？</li>
 <li>为什么接口里的 fling 系列方法你不讲？</li>
@@ -700,7 +700,7 @@ public void computeScroll() {
 <p>改完了接口当然还要改代码了，Helper 类首先要改</p>
 
 <ol>
-<li><a href="http://androidxref.com/6.0.0_r1/xref/frameworks/support/v4/java/android/support/v4/View/NestedScrollingChild%20Helper%20.java">第一版的 <code>NestedScrollingChildHelper</code></a> 里边本来持有了一个<code>ns parent</code> 域 <code>mNestedScrollingParentTouch</code>，作为绑定关系，<a href="http://androidxref.com/8.0.0_r4/xref/frameworks/support/core-ui/java/android/support/v4/View/NestedScrollingChild%20Helper%20.java">第二版</a> 又再加了一个<code>ns parent</code> 域 <code>mNestedScrollingParentNonTouch</code>，为什么是两个而不是公用一个，大概是避免对两类滑动的生命周期有过于严格的要求，比如在 <code>NestedScrollView</code> 的实现里，就是先开启<code>TYPE_NON_TOUCH</code>类型的滑动，然后关闭了 <code>TYPE_TOUCH</code> 类型的滑动，如果公用一个 <code>ns parent</code> 域，就做不到这样了</li>
+<li><a href="http://androidxref.com/6.0.0_r1/xref/frameworks/support/v4/java/android/support/v4/View/NestedScrollingChildHelper.java">第一版的 <code>NestedScrollingChildHelper</code></a> 里边本来持有了一个<code>ns parent</code> 域 <code>mNestedScrollingParentTouch</code>，作为绑定关系，<a href="http://androidxref.com/8.0.0_r4/xref/frameworks/support/core-ui/java/android/support/v4/View/NestedScrollingChildHelper.java">第二版</a> 又再加了一个<code>ns parent</code> 域 <code>mNestedScrollingParentNonTouch</code>，为什么是两个而不是公用一个，大概是避免对两类滑动的生命周期有过于严格的要求，比如在 <code>NestedScrollView</code> 的实现里，就是先开启<code>TYPE_NON_TOUCH</code>类型的滑动，然后关闭了 <code>TYPE_TOUCH</code> 类型的滑动，如果公用一个 <code>ns parent</code> 域，就做不到这样了</li>
 <li><code>NestedScrollingChildHelper</code> 里边主要就做了这一点额外的改动，其他的改动都是增加参数后的常规变换，<code>NestedScrollingParentHelper</code> 里就更没有特别的变化了</li>
 </ol>
 
@@ -863,7 +863,7 @@ public void computeScroll() {
 <ol>
 <li>一尝试就发现可能有戏，询问<code>ns parent</code>是否能够滑动不是有现成的方法吗？</li>
 <li><code>dispatchNestedPreScroll()</code>会先让<code>ns parent</code>在<code>ns child</code>之前进行滑动，而且滑动的距离被记录在它的数组参数<code>consumed</code>中，拿到数组中的值<code>ns child</code>就能知道<code>ns parent</code>是否在这时滑动了</li>
-<li><code>dispatchNestedScroll()</code>会让<code>ns parent</code>在<code>ns child</code>之后进行滑动，它有没有数组参数记录滑动距离，它只有一个返回值记录是否消费了滑动...不对，这个返回值不是记录是否消费滑动用的，它表示的是<code>ns parent</code>是否能顺利联系上，如果能，就返回<code>true</code>，并不关心它是否消费了滑动。在<code>NestedScrollingChild Helper</code>中你也能看到这个逻辑的清晰实现，同时你也会看到在<code>NestedScrollingParent2</code>中它对应的方法是<code>void onNestedScroll()</code>，没有返回值<em>（考虑过能不能通过<code>dispatchNestedScroll()</code>中<code>int[] offsetInWindow</code>没被使用的数组位置来传递信息，结果也因为 parent 中对应的方法不带这个参数而告终；而且<code>ns parent</code>也无法主动解除自己与<code>ns child</code>的绑定，这条路也不通）</em>。总之，<code>dispatchNestedScroll()</code>无法让<code>ns child</code>得知<code>ns parent</code>对事件的消费情况，此路不通</li>
+<li><code>dispatchNestedScroll()</code>会让<code>ns parent</code>在<code>ns child</code>之后进行滑动，它有没有数组参数记录滑动距离，它只有一个返回值记录是否消费了滑动...不对，这个返回值不是记录是否消费滑动用的，它表示的是<code>ns parent</code>是否能顺利联系上，如果能，就返回<code>true</code>，并不关心它是否消费了滑动。在<code>NestedScrollingChildHelper</code>中你也能看到这个逻辑的清晰实现，同时你也会看到在<code>NestedScrollingParent2</code>中它对应的方法是<code>void onNestedScroll()</code>，没有返回值<em>（考虑过能不能通过<code>dispatchNestedScroll()</code>中<code>int[] offsetInWindow</code>没被使用的数组位置来传递信息，结果也因为 parent 中对应的方法不带这个参数而告终；而且<code>ns parent</code>也无法主动解除自己与<code>ns child</code>的绑定，这条路也不通）</em>。总之，<code>dispatchNestedScroll()</code>无法让<code>ns child</code>得知<code>ns parent</code>对事件的消费情况，此路不通</li>
 <li>（其实之后通过把<code>dispatchNestedScroll()</code>的消费结果直接放在<code>ns child</code>的 View 中，用这个后门解决了Bug，但这种方式使用的局限比较大，而且下面要介绍的最新的第三版已经修复了这个问题，我就不多写了）</li>
 </ol></li>
 </ol>
@@ -922,7 +922,7 @@ public void onNestedScroll(View target, int dxConsumed, int dyConsumed,
     if (consumed != null) consumed[1] += myConsumed; // 就加了这一句
     
     final int myUnconsumed = dyUnconsumed - myConsumed;
-    mChild Helper .dispatchNestedScroll(0, myConsumed, 0, myUnconsumed, null, type, consumed);
+    mChildHelper.dispatchNestedScroll(0, myConsumed, 0, myUnconsumed, null, type, consumed);
 }
     
 // ---
