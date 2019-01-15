@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-15T10:04:30+08:00</updated>
+  <updated>2019-01-15T10:08:50+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -1241,6 +1241,10 @@ private int getOffsetY() {
 
 <span id="more"></span><!-- more -->
 
+<p><span id='/15456255866253.html' class="leancloud-visitors" data-flag-title=""><br/>
+    <em class="post-meta-item-text">阅读量 </em> <i class="leancloud-visitors-count"></i><br/>
+</span></p>
+
 <p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
 <hr/>
@@ -2441,11 +2445,6 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
     return consume;
 }
 </code></pre>
-
-<p><span id='/15456255866253.html' class="leancloud-visitors" data-flag-title="<%= page.title %>&quot;&gt;<br/>
-    <em class="post-meta-item-text">阅读量 </em><br/>
-    <i class="leancloud-visitors-count">1000000</i><br/>
-</span></p>
 
 ]]></content>
   </entry>
