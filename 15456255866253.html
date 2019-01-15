@@ -183,188 +183,13 @@ $(document).ready(function(event) {
 
 <!--但事件分发真的有那么复杂吗？真的有必要那么复杂吗？显然不是，不就分发个事件吗..-->
 
-<p>那要怎么理解事件分发呢？如果你去请教大牛，大牛说，这简单啊，去看<code>View</code>和<code>ViewGroup</code>这几个方法的源码，看懂你就会了<br/>
-大牛说得没毛病，不过我们菜鸡可能还是很懵逼，这几个方法的源码没有长到没法看的程度，但一堆其他的细节也把基本的逻辑涂抹地面目全非，所以这几个方法不是不能看，而且最后一定要看，只是不太适合一开始就直接看</p>
+<p>但讲道理，分发个触摸事件需要这么复杂吗？图啥呢？</p>
 
-<p>那要看什么呢？本文的建议是看下面这份代码，它把源码中与事件分发相关的内容剥离了出来，至少有这两个优点：</p>
+<p>于是，让我们回到最初的起点，看看分发触摸事件到底是为了解决一个什么样的问题，有没有更简单的分发办法？然后看看当需求增加的时候，要怎么调整现有的分发策略？<br/>
+所以，不用死记硬背，也不用直接去分析、梳理完整的事件分发流程，那么多复杂的逻辑和情况其实都是围绕着最根本的问题发展出来的，是随着需求的增加一步步变得复杂的，理解了这个过程，你自然会对其演化的结果了然于胸。<br/>
+<strong>从根本问题出发，一切就会变得自然而然。</strong></p>
 
-<ol>
-<li>相比源码，这份代码足够短足够简单，那些跟事件分发无关的东西通通不要来干扰我
-
-<ol>
-<li>长度总共不超过150行，剔除了所有跟事件分发无关的代码，并且把一些因为其他细节导致写得比较复杂的逻辑，用更简单直接的方式表达了</li>
-</ol></li>
-<li>相比那段经典的事件分发伪代码（见附录），这份代码又足够详细，详细到能告诉你所有你需要知道的事件分发的具体细节
-
-<ol>
-<li>那段经典伪代码只能起到提纲挈领的作用，而这份麻雀代码虽然极其精简但它五脏俱全，全到可以直接跑</li>
-<li>你可以用它进行为伪布局，然后触发触摸事件，如果在回调中打印日志，它打印出的事件分发过程与你使用系统控件真实布局时事件分发的过程是一模一样的（后文会提供一个方便的事件分发日志打印工具）</li>
-</ol></li>
-</ol>
-
-<!--
-好吧，虽然这很精辟，但是看了它，你能知道在不同的函数返回不同的值代表什么意思吗？会怎么影响后续的事件流?
-你不知道，只能去看源码
-但是源码这都是些什么啊，怎么这么多flag，还有assceeiblity，touchtarget又是什么？
-所以你需要一份代码，它要足够详细，详细到能告诉你所有你需要知道的具体的行为，它又要足够简单，那些跟事件分发无关的东西通通不要来干扰我
-这份代码就是为了满足这个要求而生的
--->
-
-<p>先开门见山直接把小麻雀贴出来，可能还是觉得有点长，不过本文涉及的所有代码就只有这些了。<br/>
-如果能直接看明白，那是最好的，如果不想看也可以先<a href="#skip_first">跳过</a>，只要顺着本文的思路往下看，不用记，你就自然而然能看穿事件分发。<br/>
-<em>（本文代码使用Kotlin编写，小麻雀也提供了<a href="https://github.com/RubiTree/DispatchTouchEventTutorial/blob/master/app/src/main/java/com/rubitree/dispatchtoucheventtutorial/sparrowdispatch/sparrow5_java/MActivity.java">Java版本</a>）</em></p>
-
-<pre><code class="language-kotlin">interface ViewParent {
-    fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean)
-}
-
-open class MView {
-    var parent: ViewParent? = null
-
-    open fun dispatch(ev: MotionEvent): Boolean {
-        // 源码里没有这么直接但区别不大，主要会考虑是否设置了 onTouchListener 和是否 enable
-        return onTouch(ev)
-    }
-
-    open fun onTouch(ev: MotionEvent): Boolean {
-        return false
-    }
-}
-
-open class MViewGroup(private val child: MView) : MView(), ViewParent {
-    private var isChildNeedEvent = false
-    private var isSelfNeedEvent = false
-    private var isDisallowIntercept = false
-
-    init {
-        child.parent = this // 这里只是示意，实际中不建议这么写，会造成提前发布未构造完成的实例
-    }
-
-    override fun dispatch(ev: MotionEvent): Boolean {
-        var handled = false
-
-        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
-            clearStatus()
-
-            if (!isDisallowIntercept &amp;&amp; onIntercept(ev)) {
-                isSelfNeedEvent = true
-                handled = onTouch(ev)
-            } else {
-                handled = child.dispatch(ev)
-                if (handled) isChildNeedEvent = true
-
-                if (!handled) { // 这里没有用 if else 是因为这样写上下一致，更清晰
-                    handled = onTouch(ev)
-                    if (handled) isSelfNeedEvent = true
-                }
-            }
-        } else {
-            // 这里 isSelfNeedEvent 条件判断应该放在 isChildNeedEvent 前面
-            // 因为两个都为真的情况只能是自己之后通过 onIntercept 抢了控制权，那这之后的控制权就不会去 child 那儿了
-            if (isSelfNeedEvent) {
-                handled = onTouch(ev)
-            } else if (isChildNeedEvent) {
-                if (!isDisallowIntercept &amp;&amp; onIntercept(ev)) {
-                    isSelfNeedEvent = true
-
-                    val cancel = MotionEvent.obtain(ev)
-                    cancel.action = MotionEvent.ACTION_CANCEL
-                    handled = child.dispatch(cancel)
-                    cancel.recycle()
-                } else {
-                    handled = child.dispatch(ev)
-                }
-            }
-            // 这里不用再 else 了，因为如果 isSelfNeedEvent 和 isChildNeedEvent 都不为 true，上面不会再发事件下来了
-        }
-
-        if (ev.actionMasked == MotionEvent.ACTION_UP
-            || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
-            clearStatus()
-        }
-
-        return handled
-    }
-
-    private fun clearStatus() {
-        isChildNeedEvent = false
-        isSelfNeedEvent = false
-        isDisallowIntercept = false
-    }
-
-    override fun onTouch(ev: MotionEvent): Boolean {
-        return false
-    }
-
-    open fun onIntercept(ev: MotionEvent): Boolean {
-        return false
-    }
-
-    override fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean) {
-        this.isDisallowIntercept = isDisallowIntercept
-        parent?.requestDisallowInterceptTouchEvent(isDisallowIntercept)
-    }
-}
-
-/**
- * 这里的大逻辑类似 MViewGroup，但细节很多不同，主要因为没有 onIntercept，会简单一些
- */
-open class MActivity(private val childGroup: MViewGroup) {
-    private var isChildNeedEvent = false
-    private var isSelfNeedEvent = false
-
-    open fun dispatch(ev: MotionEvent): Boolean {
-        var handled = false
-
-        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
-            clearStatus()
-
-            handled = childGroup.dispatch(ev)
-            if (handled) isChildNeedEvent = true
-
-            if (!handled) {
-                handled = onTouch(ev)
-                if (handled) isSelfNeedEvent = true
-            }
-        } else {
-            // 这里 isSelfNeedEvent 和 isChildNeedEvent 不会同时为真，顺序无所谓
-            if (isSelfNeedEvent) {
-                handled = onTouch(ev)
-            } else if (isChildNeedEvent) {
-                handled = childGroup.dispatch(ev)
-            }
-
-            if (!handled) handled = onTouch(ev)
-        }
-
-        if (ev.actionMasked == MotionEvent.ACTION_UP
-            || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
-            clearStatus()
-        }
-
-        return handled
-    }
-
-    private fun clearStatus() {
-        isChildNeedEvent = false
-        isSelfNeedEvent = false
-    }
-
-    open fun onTouch(ev: MotionEvent): Boolean {
-        return false
-    }
-}
-</code></pre>
-
-<ol>
-<li>小麻雀在模拟布局的时候做了一些简化：View 的父子关系通过构造器建立，而且是独生子女，一个父容器中只有一个子元素</li>
-<li>感觉有点乱是不是，没有想象中那么简单啊，它是不是对的呢，你写的是代码还是bug啊？没事，让我们来测试一下（为了避免引子部分过长，测试部分放在正文后面）</li>
-</ol>
-
-<p><span id="skip_first">这段不长的代码</span>能让你相对容易地对事件分发具体是什么样有所了解。但讲道理，它还是有点复杂，而且看完你也不一定能理解它为什么是这样，这也是读别人代码的困难之处：没有思路。所以能不能再简单一点呢？</p>
-
-<p>能！我理想中的可读代码应该是长这样的：要实现的需求 -&gt; 设计的方案 -&gt; 操作的细节 -&gt; 具体的代码<br/>
-所以本着己所不欲勿施于人的朴实道理，下面我将假设我们要从头造一个事件分发的框架，先从最简单的需求开始思考方案编写代码，然后不断增加需求并继续思考方案编写代码，最后得到上面这段基本逻辑与 Android 源码接近的麻雀代码。</p>
+<p>下面我将从头造一个事件分发的框架，先从最简单的需求开始思考方案编写代码，然后不断增加需求并继续思考方案编写代码，看看能写成什么样子。</p>
 
 <h2 id="toc_1">1. 试造轮子</h2>
 
@@ -384,7 +209,8 @@ open class MActivity(private val childGroup: MViewGroup) {
 <p>示意图<br/>
 <img src="media/15456255866253/15463678459112.jpg" alt="" style="width:400px;"/></p>
 
-<p>麻雀代码：</p>
+<p>麻雀代码：<br/>
+<em>（本文代码使用Kotlin编写，主要代码也提供了<a href="https://github.com/RubiTree/DispatchTouchEventTutorial/blob/master/app/src/main/java/com/rubitree/dispatchtoucheventtutorial/sparrowdispatch/sparrow5_java/MActivity.java">Java版本</a>）</em></p>
 
 <pre><code class="language-kotlin">open class MView {
     open fun passEvent(ev: MotionEvent) {
@@ -921,7 +747,7 @@ class MViewGroup(private val child: MView) : MView() {
     - 正常里边的子View在按下就会直接显示按下状态，只是只有在马上抬起时才表现为点击，如果只是`MOVE`不抬起，那就是滑外面了，就取消按下状态
     - 这样可行，但Android觉得这个体验还是不够好，于是会让里边的子View感知自己是不是在一个可滑动View里边，如果是的话，它不会下按下直接显示按下状态，而是稍微晚那么一点点显示出啦，提升了一点用户体验-->
 
-<p>到现在，代码就跟一开始贴出的麻雀一模一样了：</p>
+<p>麻雀代码：</p>
 
 <pre><code class="language-kotlin">interface ViewParent {
     fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean)
@@ -1096,7 +922,24 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 
 <p>到这里，我们终于造好了一个粗糙但不劣质的轮子，源码的主要逻辑与它的区别不大，具体区别大概有：<code>TouchTarget</code>机制、多点触控机制、NestedScrolling 机制、处理各种 listener、结合View的状态进行处理等，相比主要逻辑，它们就没有那么重要了，大家可以自行阅读源码，之后有空也会写关于多点触控和<code>TouchTarget</code>的内容<del>（挖坑预警）</del></p>
 
-<p>所以回头看，你会发现事件分发其实很简单，它的关键不在于「不同的事件类型、不同的View种类、不同的回调方法、方法不同的返回值」对事件分发是怎么影响的。<br/>
+<p>轮子的完整代码可以在在<a href="https://github.com/RubiTree/DispatchTouchEventTutorial/blob/master/app/src/main/java/com/rubitree/dispatchtoucheventtutorial/sparrowdispatch/sparrow5/SparrowDispatch.kt">这里</a>查看（<a href="(https://github.com/RubiTree/DispatchTouchEventTutorial/blob/master/app/src/main/java/com/rubitree/dispatchtoucheventtutorial/sparrowdispatch/sparrow5_java/MActivity.java)">Java版本</a>）<br/>
+这个轮子把源码中与事件分发相关的内容剥离了出来：</p>
+
+<ol>
+<li>相比源码，这份代码足够短足够简单，那些跟事件分发无关的东西通通不要来干扰我
+
+<ol>
+<li>长度总共不超过150行，剔除了所有跟事件分发无关的代码，并且把一些因为其他细节导致写得比较复杂的逻辑，用更简单直接的方式表达了</li>
+</ol></li>
+<li>相比那段经典的事件分发伪代码（见附录），这份代码又足够详细，详细到能告诉你所有你需要知道的事件分发的具体细节
+
+<ol>
+<li>那段经典伪代码只能起到提纲挈领的作用，而这份麻雀代码虽然极其精简但它五脏俱全，全到可以直接跑 —— 你可以用它进行为伪布局，然后触发触摸事件</li>
+</ol></li>
+</ol>
+
+<p>但轮子不是最重要的，最重要的是整个演化的过程。<br/>
+所以回头看，你会发现事件分发其实很简单，它的关键不在于「不同的事件类型、不同的View种类、不同的回调方法、方法不同的返回值」对事件分发是怎么影响的。<br/>
 关键在于<strong>「它要实现什么功能？对实现效果有什么要求？使用了什么解决方案？」</strong>，从这个角度，就能清晰而且简单地把事件分发整个流程梳理清楚。</p>
 
 <p>事件分发要实现的功能是：让合适的View去消费触摸事件，对用户的操作进行反馈，使之符合用户的直觉。</p>
