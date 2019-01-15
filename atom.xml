@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-14T21:13:17+08:00</updated>
+  <updated>2019-01-15T10:04:30+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -2441,6 +2441,11 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
     return consume;
 }
 </code></pre>
+
+<p><span id='/15456255866253.html' class="leancloud-visitors" data-flag-title="<%= page.title %>&quot;&gt;<br/>
+    <em class="post-meta-item-text">阅读量 </em><br/>
+    <i class="leancloud-visitors-count">1000000</i><br/>
+</span></p>
 
 ]]></content>
   </entry>
