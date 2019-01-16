@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-15T21:53:53+08:00</updated>
+  <updated>2019-01-15T21:53:57+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -2256,8 +2256,9 @@ fun getViewDispatchDelegate(layer: String = &quot;View&quot;): IDispatchDelegate
 
 <h3 id="toc_13">2.3. 测试结果</h3>
 
-<p>除了以上场景外，我也模拟了其他复杂的场景，能看到系统控件和麻雀控件打印的日志一模一样，这就说明了麻雀控件中的事件分发逻辑，确实与系统源码是一致的。<br/>
-而且从打印的日志中，能清晰地看到事件分发的轨迹，对理解事件分发过程也有很大的帮助。</p>
+<p>除了以上场景外，我也模拟了其他复杂的场景，能看到系统控件和麻雀控件打印的日志一模一样，这就说明了麻雀控件中的事件分发逻辑，确实与系统源码是一致的。</p>
+
+<p>而且从打印的日志中，能清晰地看到事件分发的轨迹，对理解事件分发过程也有很大的帮助。所以大家如果有需要，也可以直接使用<a href="https://github.com/RubiTree/DispatchTouchEventTutorial/blob/master/app/src/main/java/com/rubitree/dispatchtoucheventtutorial/touchdojo/SystemViews.kt">这个框架像这样</a>对触摸事件分发的各种情况进行调试。</p>
 
 <h2 id="toc_14">3. 实践</h2>
 
