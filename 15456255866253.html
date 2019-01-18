@@ -765,7 +765,7 @@ class MViewGroup(private val child: MView) : MView() {
     - 正常里边的子View在按下就会直接显示按下状态，只是只有在马上抬起时才表现为点击，如果只是`MOVE`不抬起，那就是滑外面了，就取消按下状态
     - 这样可行，但Android觉得这个体验还是不够好，于是会让里边的子View感知自己是不是在一个可滑动View里边，如果是的话，它不会下按下直接显示按下状态，而是稍微晚那么一点点显示出啦，提升了一点用户体验-->
 
-<p>麻雀代码：</p>
+<p>在「四造」的基础上，修改得到以下代码：</p>
 
 <pre><code class="language-kotlin">interface ViewParent {
     fun requestDisallowInterceptTouchEvent(isDisallowIntercept: Boolean)
