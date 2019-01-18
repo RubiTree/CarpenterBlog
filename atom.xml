@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-18T18:49:11+08:00</updated>
+  <updated>2019-01-18T18:51:43+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -1320,7 +1320,7 @@ private int getOffsetY() {
 
 <p>这些规律和流程图确实是对的，而且某种意义上也是非常清晰的，能帮助你在调试 Bug 的时候找到一点方向。<br/>
 你或许可以奋发图强，把这些流程图和规律背下来，也能在需要的时候一通叽里呱啦背完大家大眼瞪小眼。<br/>
-但它们并不能让你真正理解事件分发是什么样子，你可能某一次花费了大量的时间去看懂它们，但是「每次都能看明白！过一段时间又忘了！」</p>
+但它们并不能让你真正理解事件分发是什么样子，你可能某一次花费了大量的时间去看懂它们，但是「每次都能看明白！过一段时间又忘了！」<em>（某段有代表性的评论原话）</em></p>
 
 <!--面对「是什么、为什么、怎么办」哲学三连，你只能抱拳告辞。-->
 
@@ -1345,8 +1345,8 @@ private int getOffsetY() {
 
 <h3 id="toc_2">1.1. 一造：直接传给目标View</h3>
 
-<p>我们先实现一个最简单的需求：Activity 中有一堆层层嵌套的 View，有且只有最里边那个 View 要处理事件<br/>
-（黄色高亮 View 可以处理事件，蓝色 View 不处理事件）<br/>
+<p>我们先实现一个最简单的需求：Activity 中有一堆层层嵌套的 View，有且只有最里边那个 View 会消费事件<br/>
+<em>（黄色高亮 View 代表可以消费事件，蓝色 View 代表不消费事件）</em><br/>
 <img src="media/15456255866253/15463677874030.jpg" alt="" style="width:350px;"/></p>
 
 <p>思考方案：</p>
@@ -1492,8 +1492,8 @@ class MViewGroup(private val child: MView) : MView() {
 <p>这样写完，整个行为其实没有变化，但你会发现：</p>
 
 <ol>
-<li>控制逻辑集中在<code>dispatch</code>中，一目了然</li>
-<li><code>onTouch</code>单纯是一个钩子，框架使用者只需要关心这个钩子和它的返回值，不用太关心控制流程</li>
+<li>控制逻辑集中在<code>dispatch()</code>中，一目了然</li>
+<li><code>onTouch()</code>单纯是一个钩子，框架使用者只需要关心这个钩子和它的返回值，不用太关心控制流程</li>
 <li>另外，连<code>parent</code>也不需要了</li>
 </ol>
 
@@ -1641,7 +1641,7 @@ class MViewGroup(private val child: MView) : MView() {
 
 <ol>
 <li>因为子View和父View都无法在<code>DOWN</code>的时候判断当前事件流是不是该给自己，所以一开始它们都只能返回<code>false</code>。但为了能对后续事件做判断，你希望事件继续流过它们，按照当前框架的逻辑，你又不能返回<code>false</code>。</li>
-<li>假设事件会流过它们，当事件流了一会儿后，父 View 判断出这符合自己的消费模式啊，于是想把事件给自己消费，但此时子 View 可能已经在消费事件了，而目前的框架是做不到不让子 View 消费事件的</li>
+<li>假设事件会流过它们，当事件流了一会儿后，父 View 判断出这符合自己的消费模式啊，于是想把事件给自己消费，但此时子 View 可能已经在消费事件了，而目前的框架是做不到阻止子 View 继续消费事件的</li>
 </ol>
 
 <p>所以要解决上述的冲突，就肯定要对上一版的事件处理框架进行修改，而且看上去一不小心就会大改</p>
@@ -2025,7 +2025,7 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 
 <ol>
 <li>不会对事件进行拦截</li>
-<li>只要有子View没有处理的事件，它都会交给自己的<code>onTouch</code></li>
+<li>只要有子View没有处理的事件，它都会交给自己的<code>onTouch()</code></li>
 </ol>
 
 <p>所以不多讲了，直接补上Activity的麻雀：</p>
@@ -2110,8 +2110,8 @@ open class MViewGroup(private val child: MView) : MView(), ViewParent {
 <li>让消费事件的View跟用户的意图一致</li>
 </ol>
 
-<p>第二个要求是最难的，如果有多个View都可以消费触摸事件，怎么判定哪个View更适合消费，并且把事件交给它。<br/>
-于是简单但有效地使用了一套先到先得的策略，让内外的可消费事件的View拥有近乎平等的竞争消费者的资格：它们都能接收到事件，并在自己判定应该消费事件的时候去发起竞争申请，申请成功后事件就全部由它消费。</p>
+<p>第二个要求是最难实现的，如果有多个View都可以消费触摸事件，怎么判定哪个View更适合消费，并且把事件交给它。<br/>
+我们使用了一套简单但有效的先到先得策略，让内外的可消费事件的View拥有近乎平等的竞争消费者的资格：它们都能接收到事件，并在自己判定应该消费事件的时候去发起竞争申请，申请成功后事件就全部由它消费。</p>
 
 <p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
 
