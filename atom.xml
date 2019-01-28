@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-18T18:51:43+08:00</updated>
+  <updated>2019-01-18T19:27:19+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -23,7 +23,8 @@
 
 <span id="more"></span><!-- more -->
 
-<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em></p>
+<p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em><br/>
+（博客搭得有点简陋，可以在 <a href="https://juejin.im/post/5c3c8d2ae51d4552475fcef7">RubiTree的掘金专栏</a> 获得更好的浏览体验哦~）</p>
 
 <hr/>
 
@@ -1330,7 +1331,7 @@ private int getOffsetY() {
 
 <p>但讲道理，分发个触摸事件为什么会这么复杂呢？需要这么复杂吗？图啥呢？</p>
 
-<p>于是，让我们回到起点，看看分发触摸事件到底是为了解决一个什么样的问题，有没有更简单的分发办法？然后看看当需求增加的时候，要怎么调整现有的分发策略？<br/>
+<p>于是，让我们回到起点，看看分发触摸事件到底是为了解决一个什么样的问题，有没有更简单的分发办法？然后看看当需求增加的时候，要怎么调整这个简单的分发策略？<br/>
 看到最后你就会发现，原来一切是那么地自然。</p>
 
 <p>所以，不用死记硬背，也不用急着去怼完整的事件分发流程，那么多复杂的逻辑和情况其实都是围绕着最根本的问题发展出来的，是随着需求的增加一步步变得复杂的，理解了演化过程，你自然会对其演化的结果了然于胸，想忘都忘不掉。<br/>
@@ -1849,7 +1850,7 @@ class MViewGroup(private val child: MView) : MView() {
 <li>所以这类问题是一定要解决的，但要怎么解决呢
 
 <ol>
-<li>还是先从业务上看，从用户的角度看，当里边已经开始做一些特殊处理了，外面应不应该把事件抢走？
+<li>还是先从业务出发，从用户的角度看，当里边已经开始做一些特殊处理了，外面应不应该把事件抢走？
 
 <ol>
 <li>不应该对吧，OK，解决方针就是不应该让外边的View抢事件</li>
