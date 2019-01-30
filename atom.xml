@@ -4,7 +4,7 @@
   <title><![CDATA[RubiTree's Blog]]></title>
   <link href="http://blog.rubitree.com/atom.xml" rel="self"/>
   <link href="http://blog.rubitree.com/"/>
-  <updated>2019-01-28T19:32:17+08:00</updated>
+  <updated>2019-01-28T19:40:28+08:00</updated>
   <id>http://blog.rubitree.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -24,7 +24,8 @@
 <span id="more"></span><!-- more -->
 
 <p><em>（转载请注明作者：RubiTree，地址：blog.rubitree.com ）</em><br/>
-（博客搭得有点简陋，可以在 <a href="https://juejin.im/user/5c3c83bd6fb9a049b5070f9e/posts">RubiTree的掘金专栏</a> 获得更好的浏览体验哦~）</p>
+（图片加载速度稍慢，还请看官耐心等待~）<br/>
+（博客搭得有点简陋，可以点击 <a href="https://juejin.im/user/5c3c83bd6fb9a049b5070f9e/posts">&gt;&gt; RubiTree 的掘金专栏 &lt;&lt;</a> 获得更好的浏览体验哦~）</p>
 
 <hr/>
 
@@ -129,6 +130,8 @@
 <p></br></p>
 
 <p>NestedScrolling 机制翻译过来叫嵌套滑动机制（本文将混用），它提供了一种优雅解决嵌套滑动问题的方案，具体是什么方案呢？我们从嵌套的同向滑动说起。</p>
+
+<p>（文章有一点点长，但一定是字有所值的，把结尾的一句话搬到前面：如果你没有跳过地看完本文，关于 NestedScrolling 机制，我相信现在无论是原理、还是使用 <em>（此处有彩蛋）</em> 、甚至<del>八卦</del>历史，你都了解得一清二楚了，否则我只能怀疑<del>你的</del>我的语文<del>老师</del>表达水平了）</p>
 
 <h2 id="toc_0">1. 嵌套同向滑动</h2>
 
@@ -1199,7 +1202,7 @@ private int getOffsetY() {
 
 <h2 id="toc_24">5. 总结</h2>
 
-<p>如果你没有跳过地看到这里，关于 NestedScrolling 机制，我相信现在无论是使用、还是原理、甚至<del>八卦</del>历史，你都了解得一清二楚了，否则我只能怀疑<del>你的</del>我的语文<del>老师</del>表达水平了。</p>
+<p>如果你没有跳过地看到这里，关于 NestedScrolling 机制，我相信现在无论是原理、还是使用、甚至<del>八卦</del>历史，你都了解得一清二楚了，否则我只能怀疑<del>你的</del>我的语文<del>老师</del>表达水平了。</p>
 
 <p>而关于代码的设计，你大概也能学到一点，Google 工程师三入火场英勇救火的身影应该给你留下了深刻的印象。</p>
 
